@@ -1,3 +1,4 @@
+
 ## Book&Dock by Malign
 
 ### Technologies:
@@ -27,6 +28,9 @@ UTC-3 (3-5 business years)
 
 ### Roles:
 Backend + DB: Arsenii, Maksym, Danny - repo
+
 Web: Danny, Oleksandr - repo
+
 Mobile: Kyrylo - repo
+
 Team lead: Kyrylo
