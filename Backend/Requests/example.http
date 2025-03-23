@@ -1,0 +1,9 @@
+### Example
+GET /example
+Host: {{Backend_HostAddress}}
+
+> {%
+    client.test('Example test', () => {
+        client.assert(response.body.includes("Some string"), 'Body does not include "Some string"');
+    });
+%}

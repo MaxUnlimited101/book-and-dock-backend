@@ -1,0 +1,20 @@
+### Approve post
+# TODO: make this more clear cuz idk what happens here (page 13 in docs)
+POST /admin/posts
+Host: {{Backend_HostAddress}}
+Content-Type: application/json
+
+{
+  "title": "New Post Title",
+  "content": "This is the content of the new post.",
+  "authorID": 123,
+  "publicationDate": "2025-03-23"
+}
+
+> {%
+    client.test('Approve post #1', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}

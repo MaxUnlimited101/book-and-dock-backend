@@ -1,0 +1,17 @@
+### Post a comment
+POST /guides/1/comments/
+Host: {{Backend_HostAddress}}
+Content-Type: application/json
+
+{
+  "userID": 101,
+  "content": "Great guide!"
+}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}

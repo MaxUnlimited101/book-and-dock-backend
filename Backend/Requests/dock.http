@@ -1,0 +1,95 @@
+### Get all docks
+GET /docks
+Host: {{Backend_HostAddress}}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
+
+### Get docks with date only
+GET /docks?date=2025-03-19
+Host: {{Backend_HostAddress}}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
+
+### Get docks with priceStart only
+GET /docks?priceStart=200
+Host: {{Backend_HostAddress}}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
+
+### Get docks with priceEnd only
+GET /docks?priceEnd=300
+Host: {{Backend_HostAddress}}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
+
+### Get docks with two services only
+GET /docks?services=electricity,water
+Host: {{Backend_HostAddress}}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
+
+### Get docks with availability only
+GET /docks?availability=1
+Host: {{Backend_HostAddress}}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
+
+### Get docks with longitude and latitude
+GET /docks?lon=23&lat=25
+Host: {{Backend_HostAddress}}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
+
+### Get docks with all filters enabled
+GET /docks?date=2025-03-19&priceStart=200&priceEnd=300&services=electricity,water&availability=1&lon=23&lat=25
+Host: {{Backend_HostAddress}}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
