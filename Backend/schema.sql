@@ -5,7 +5,7 @@
 -- Dumped from database version 17.4
 -- Dumped by pg_dump version 17.2
 
--- Started on 2025-03-23 03:57:20
+-- Started on 2025-03-23 16:41:56
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -67,7 +67,6 @@ ALTER TABLE public."Comments" OWNER TO postgres;
 CREATE TABLE public."DockingSpots" (
     "Id" integer NOT NULL,
     "Name" character varying(100),
-    "Location" jsonb NOT NULL,
     "Description" text,
     "OwnerId" integer NOT NULL,
     "PortId" integer NOT NULL,
@@ -91,7 +90,6 @@ CREATE TABLE public."Guides" (
     "Content" text NOT NULL,
     "CreatedBy" integer,
     "CreatedOn" timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    "Location" jsonb NOT NULL,
     "IsApproved" boolean DEFAULT false NOT NULL
 );
 
@@ -115,6 +113,49 @@ CREATE TABLE public."Images" (
 ALTER TABLE public."Images" OWNER TO postgres;
 
 --
+-- TOC entry 242 (class 1259 OID 16824)
+-- Name: Locations; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Locations" (
+    "Id" integer NOT NULL,
+    "CreatedOn" timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    "Latitude" double precision NOT NULL,
+    "Longitude" double precision NOT NULL,
+    "Town" character varying(100) NOT NULL,
+    "PortId" integer,
+    "DockingSpotId" integer
+);
+
+
+ALTER TABLE public."Locations" OWNER TO postgres;
+
+--
+-- TOC entry 241 (class 1259 OID 16823)
+-- Name: Locations_Id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Locations_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public."Locations_Id_seq" OWNER TO postgres;
+
+--
+-- TOC entry 5059 (class 0 OID 0)
+-- Dependencies: 241
+-- Name: Locations_Id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Locations_Id_seq" OWNED BY public."Locations"."Id";
+
+
+--
 -- TOC entry 240 (class 1259 OID 16572)
 -- Name: Notifications; Type: TABLE; Schema: public; Owner: postgres
 --
@@ -136,7 +177,8 @@ ALTER TABLE public."Notifications" OWNER TO postgres;
 
 CREATE TABLE public."PaymentMethods" (
     "Id" integer NOT NULL,
-    "Name" character varying(20) NOT NULL
+    "Name" character varying(20) NOT NULL,
+    "CreatedOn" timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -151,7 +193,6 @@ CREATE TABLE public."Ports" (
     "Id" integer NOT NULL,
     "CreatedOn" timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     "Name" character varying(255) NOT NULL,
-    "Location" jsonb NOT NULL,
     "Description" text,
     "OwnerId" integer NOT NULL,
     "IsApproved" boolean DEFAULT false NOT NULL
@@ -184,7 +225,8 @@ ALTER TABLE public."Reviews" OWNER TO postgres;
 
 CREATE TABLE public."Roles" (
     "Id" integer NOT NULL,
-    "Name" character varying(20) NOT NULL
+    "Name" character varying(20) NOT NULL,
+    "CreatedOn" timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -245,7 +287,7 @@ CREATE SEQUENCE public.bookings_id_seq
 ALTER SEQUENCE public.bookings_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5044 (class 0 OID 0)
+-- TOC entry 5060 (class 0 OID 0)
 -- Dependencies: 227
 -- Name: bookings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -270,7 +312,7 @@ CREATE SEQUENCE public.comments_id_seq
 ALTER SEQUENCE public.comments_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5045 (class 0 OID 0)
+-- TOC entry 5061 (class 0 OID 0)
 -- Dependencies: 235
 -- Name: comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -295,7 +337,7 @@ CREATE SEQUENCE public.dockingspots_id_seq
 ALTER SEQUENCE public.dockingspots_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5046 (class 0 OID 0)
+-- TOC entry 5062 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: dockingspots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -320,7 +362,7 @@ CREATE SEQUENCE public.guides_id_seq
 ALTER SEQUENCE public.guides_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5047 (class 0 OID 0)
+-- TOC entry 5063 (class 0 OID 0)
 -- Dependencies: 231
 -- Name: guides_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -345,7 +387,7 @@ CREATE SEQUENCE public.images_id_seq
 ALTER SEQUENCE public.images_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5048 (class 0 OID 0)
+-- TOC entry 5064 (class 0 OID 0)
 -- Dependencies: 233
 -- Name: images_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -370,7 +412,7 @@ CREATE SEQUENCE public.notifications_id_seq
 ALTER SEQUENCE public.notifications_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5049 (class 0 OID 0)
+-- TOC entry 5065 (class 0 OID 0)
 -- Dependencies: 239
 -- Name: notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -395,7 +437,7 @@ CREATE SEQUENCE public.paymentmethods_id_seq
 ALTER SEQUENCE public.paymentmethods_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5050 (class 0 OID 0)
+-- TOC entry 5066 (class 0 OID 0)
 -- Dependencies: 229
 -- Name: paymentmethods_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -420,7 +462,7 @@ CREATE SEQUENCE public.port_id_seq
 ALTER SEQUENCE public.port_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5051 (class 0 OID 0)
+-- TOC entry 5067 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: port_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -445,7 +487,7 @@ CREATE SEQUENCE public.reviews_id_seq
 ALTER SEQUENCE public.reviews_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5052 (class 0 OID 0)
+-- TOC entry 5068 (class 0 OID 0)
 -- Dependencies: 237
 -- Name: reviews_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -470,7 +512,7 @@ CREATE SEQUENCE public.roles_id_seq
 ALTER SEQUENCE public.roles_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5053 (class 0 OID 0)
+-- TOC entry 5069 (class 0 OID 0)
 -- Dependencies: 219
 -- Name: roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -495,7 +537,7 @@ CREATE SEQUENCE public.services_id_seq
 ALTER SEQUENCE public.services_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5054 (class 0 OID 0)
+-- TOC entry 5070 (class 0 OID 0)
 -- Dependencies: 225
 -- Name: services_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -520,7 +562,7 @@ CREATE SEQUENCE public.users_id_seq
 ALTER SEQUENCE public.users_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5055 (class 0 OID 0)
+-- TOC entry 5071 (class 0 OID 0)
 -- Dependencies: 217
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -529,7 +571,7 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public."Users"."Id";
 
 
 --
--- TOC entry 4809 (class 2604 OID 16473)
+-- TOC entry 4815 (class 2604 OID 16473)
 -- Name: Bookings Id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -537,7 +579,7 @@ ALTER TABLE ONLY public."Bookings" ALTER COLUMN "Id" SET DEFAULT nextval('public
 
 
 --
--- TOC entry 4818 (class 2604 OID 16540)
+-- TOC entry 4825 (class 2604 OID 16540)
 -- Name: Comments Id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -545,7 +587,7 @@ ALTER TABLE ONLY public."Comments" ALTER COLUMN "Id" SET DEFAULT nextval('public
 
 
 --
--- TOC entry 4803 (class 2604 OID 16431)
+-- TOC entry 4809 (class 2604 OID 16431)
 -- Name: DockingSpots Id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -553,7 +595,7 @@ ALTER TABLE ONLY public."DockingSpots" ALTER COLUMN "Id" SET DEFAULT nextval('pu
 
 
 --
--- TOC entry 4813 (class 2604 OID 16504)
+-- TOC entry 4820 (class 2604 OID 16504)
 -- Name: Guides Id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -561,7 +603,7 @@ ALTER TABLE ONLY public."Guides" ALTER COLUMN "Id" SET DEFAULT nextval('public.g
 
 
 --
--- TOC entry 4816 (class 2604 OID 16520)
+-- TOC entry 4823 (class 2604 OID 16520)
 -- Name: Images Id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -569,7 +611,15 @@ ALTER TABLE ONLY public."Images" ALTER COLUMN "Id" SET DEFAULT nextval('public.i
 
 
 --
--- TOC entry 4822 (class 2604 OID 16575)
+-- TOC entry 4831 (class 2604 OID 16827)
+-- Name: Locations Id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Locations" ALTER COLUMN "Id" SET DEFAULT nextval('public."Locations_Id_seq"'::regclass);
+
+
+--
+-- TOC entry 4829 (class 2604 OID 16575)
 -- Name: Notifications Id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -577,7 +627,7 @@ ALTER TABLE ONLY public."Notifications" ALTER COLUMN "Id" SET DEFAULT nextval('p
 
 
 --
--- TOC entry 4812 (class 2604 OID 16492)
+-- TOC entry 4818 (class 2604 OID 16492)
 -- Name: PaymentMethods Id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -585,7 +635,7 @@ ALTER TABLE ONLY public."PaymentMethods" ALTER COLUMN "Id" SET DEFAULT nextval('
 
 
 --
--- TOC entry 4800 (class 2604 OID 16415)
+-- TOC entry 4806 (class 2604 OID 16415)
 -- Name: Ports Id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -593,7 +643,7 @@ ALTER TABLE ONLY public."Ports" ALTER COLUMN "Id" SET DEFAULT nextval('public.po
 
 
 --
--- TOC entry 4820 (class 2604 OID 16560)
+-- TOC entry 4827 (class 2604 OID 16560)
 -- Name: Reviews Id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -601,7 +651,7 @@ ALTER TABLE ONLY public."Reviews" ALTER COLUMN "Id" SET DEFAULT nextval('public.
 
 
 --
--- TOC entry 4799 (class 2604 OID 16401)
+-- TOC entry 4804 (class 2604 OID 16401)
 -- Name: Roles Id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -609,7 +659,7 @@ ALTER TABLE ONLY public."Roles" ALTER COLUMN "Id" SET DEFAULT nextval('public.ro
 
 
 --
--- TOC entry 4806 (class 2604 OID 16452)
+-- TOC entry 4812 (class 2604 OID 16452)
 -- Name: Services Id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -617,7 +667,7 @@ ALTER TABLE ONLY public."Services" ALTER COLUMN "Id" SET DEFAULT nextval('public
 
 
 --
--- TOC entry 4797 (class 2604 OID 16391)
+-- TOC entry 4802 (class 2604 OID 16391)
 -- Name: Users Id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -625,7 +675,7 @@ ALTER TABLE ONLY public."Users" ALTER COLUMN "Id" SET DEFAULT nextval('public.us
 
 
 --
--- TOC entry 5026 (class 0 OID 16470)
+-- TOC entry 5039 (class 0 OID 16470)
 -- Dependencies: 228
 -- Data for Name: Bookings; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -635,7 +685,7 @@ COPY public."Bookings" ("Id", "SailorId", "DockingSpotId", "StartDate", "EndDate
 
 
 --
--- TOC entry 5034 (class 0 OID 16537)
+-- TOC entry 5047 (class 0 OID 16537)
 -- Dependencies: 236
 -- Data for Name: Comments; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -655,47 +705,47 @@ COPY public."Comments" ("Id", "CreatedBy", "GuideId", "Content", "CreatedOn") FR
 
 
 --
--- TOC entry 5022 (class 0 OID 16428)
+-- TOC entry 5035 (class 0 OID 16428)
 -- Dependencies: 224
 -- Data for Name: DockingSpots; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public."DockingSpots" ("Id", "Name", "Location", "Description", "OwnerId", "PortId", "PricePerNight", "PricePerPerson", "IsAvailable", "CreatedOn") FROM stdin;
-1	Sunset Dock	{"Town": "Bogaczewo", "Latitude": 53.963, "Longitude": 21.748}	Perfect for catching the sunset. Includes water & power hookup.	3	1	150	20	t	2025-03-23 02:46:05.359461
-2	Budget Bay	{"Town": "Bogaczewo", "Latitude": 53.961, "Longitude": 21.746}	Affordable dock close to shore with basic facilities.	3	1	80	10	t	2025-03-23 02:46:05.359461
-3	Main Marina Spot	{"Town": "Gizycko", "Latitude": 54.032, "Longitude": 21.768}	Centrally located dock with easy town access.	3	2	200	25	t	2025-03-23 02:46:05.359461
-4	Quiet Corner	{"Town": "Gizycko", "Latitude": 54.030, "Longitude": 21.766}	Private spot away from the crowd, surrounded by trees.	3	2	120	15	f	2025-03-23 02:46:05.359461
-5	Eastern Edge Dock	{"Town": "Bogaczewo", "Latitude": 53.9667789, "Longitude": 21.7483321}	Scenic spot ideal for sunrise views.	3	1	130	15	t	2025-03-23 03:36:55.214364
-6	Lagoon Lounge	{"Town": "Bogaczewo", "Latitude": 53.9681221, "Longitude": 21.7499123}	Spacious dock with lounge seating.	3	1	180	18	t	2025-03-23 03:36:55.214364
-7	Kamienna Bay Dock	{"Town": "Kamienna", "Latitude": 53.9809821, "Longitude": 21.7038123}	Tucked away for a quiet stay.	3	3	90	12	t	2025-03-23 03:36:55.214364
-8	Sailor's Stop	{"Town": "Nowy Harbor", "Latitude": 54.0150123, "Longitude": 21.7638876}	Convenient for quick overnight stops.	3	4	110	14	t	2025-03-23 03:36:55.214364
-9	Lighthouse Point	{"Town": "Laguna", "Latitude": 54.0321123, "Longitude": 21.7698876}	Iconic spot with lighthouse backdrop.	3	5	190	20	t	2025-03-23 03:36:55.214364
-10	Green Hideaway	{"Town": "Hidden", "Latitude": 53.9691223, "Longitude": 21.7423371}	Secluded and peaceful dock area.	3	6	95	10	f	2025-03-23 03:36:55.214364
+COPY public."DockingSpots" ("Id", "Name", "Description", "OwnerId", "PortId", "PricePerNight", "PricePerPerson", "IsAvailable", "CreatedOn") FROM stdin;
+1	Sunset Dock	Perfect for catching the sunset. Includes water & power hookup.	3	1	150	20	t	2025-03-23 02:46:05.359461
+2	Budget Bay	Affordable dock close to shore with basic facilities.	3	1	80	10	t	2025-03-23 02:46:05.359461
+3	Main Marina Spot	Centrally located dock with easy town access.	3	2	200	25	t	2025-03-23 02:46:05.359461
+4	Quiet Corner	Private spot away from the crowd, surrounded by trees.	3	2	120	15	f	2025-03-23 02:46:05.359461
+5	Eastern Edge Dock	Scenic spot ideal for sunrise views.	3	1	130	15	t	2025-03-23 03:36:55.214364
+6	Lagoon Lounge	Spacious dock with lounge seating.	3	1	180	18	t	2025-03-23 03:36:55.214364
+7	Kamienna Bay Dock	Tucked away for a quiet stay.	3	3	90	12	t	2025-03-23 03:36:55.214364
+8	Sailor's Stop	Convenient for quick overnight stops.	3	4	110	14	t	2025-03-23 03:36:55.214364
+9	Lighthouse Point	Iconic spot with lighthouse backdrop.	3	5	190	20	t	2025-03-23 03:36:55.214364
+10	Green Hideaway	Secluded and peaceful dock area.	3	6	95	10	f	2025-03-23 03:36:55.214364
 \.
 
 
 --
--- TOC entry 5030 (class 0 OID 16501)
+-- TOC entry 5043 (class 0 OID 16501)
 -- Dependencies: 232
 -- Data for Name: Guides; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public."Guides" ("Id", "Title", "Content", "CreatedBy", "CreatedOn", "Location", "IsApproved") FROM stdin;
-1	Gizycko - greatest place on earth	Gizycko - greatest place on earth. The end.	2	2025-03-23 02:34:21.592572	{"Town": "Gizycko", "Latitude": 54.0313983, "Longitude": 21.7679876}	t
-2	Welcome to my Dock: Bogaczewo	Dock here and pay money, the best toilet outside and \n\tyou can take a shower when it is raining	3	2025-03-23 02:34:21.592572	{"Town": "Bogaczewo", "Latitude": 53.9629082, "Longitude": 21.7473430}	f
-3	Sailing Through the Bay	The bay offers stunning views and calm waters...	4	2025-03-23 03:35:45.858643	{"Town": "Zloty Port", "Latitude": 54.2112981, "Longitude": 21.9341086}	t
-4	Hidden Lagoon Entry	Watch for underwater rocks near the entrance...	6	2025-03-23 03:35:45.858643	{"Town": "Kamienna", "Latitude": 53.9818273, "Longitude": 21.7019281}	f
-5	Docking Etiquette Tips	Be courteous when using shared docking zones...	5	2025-03-23 03:35:45.858643	{"Town": "Gizycko", "Latitude": 54.0328712, "Longitude": 21.7712387}	t
-6	Local Seafood Spots	Visit these three lakefront seafood gems...	7	2025-03-23 03:35:45.858643	{"Town": "Gizycko", "Latitude": 54.0156738, "Longitude": 21.7639382}	t
-7	Avoiding Shallow Zones	Always keep your eyes on the sonar here...	8	2025-03-23 03:35:45.858643	{"Town": "Bogaczewo", "Latitude": 53.9672239, "Longitude": 21.7428831}	f
-8	Night Navigation Guide	Use the west-facing lighthouse as your landmark...	1	2025-03-23 03:35:45.858643	{"Town": "Bogaczewo", "Latitude": 53.9700123, "Longitude": 21.7404449}	t
-9	Best Photo Spots	Get the perfect sunset shot from this dock...	2	2025-03-23 03:35:45.858643	{"Town": "Gizycko", "Latitude": 54.0310123, "Longitude": 21.7660099}	t
-10	Supplies Checklist	Always carry these essentials before setting out...	3	2025-03-23 03:35:45.858643	{"Town": "Bogaczewo", "Latitude": 53.9651123, "Longitude": 21.7463377}	t
+COPY public."Guides" ("Id", "Title", "Content", "CreatedBy", "CreatedOn", "IsApproved") FROM stdin;
+1	Gizycko - greatest place on earth	Gizycko - greatest place on earth. The end.	2	2025-03-23 02:34:21.592572	t
+2	Welcome to my Dock: Bogaczewo	Dock here and pay money, the best toilet outside and \n\tyou can take a shower when it is raining	3	2025-03-23 02:34:21.592572	f
+3	Sailing Through the Bay	The bay offers stunning views and calm waters...	4	2025-03-23 03:35:45.858643	t
+4	Hidden Lagoon Entry	Watch for underwater rocks near the entrance...	6	2025-03-23 03:35:45.858643	f
+5	Docking Etiquette Tips	Be courteous when using shared docking zones...	5	2025-03-23 03:35:45.858643	t
+6	Local Seafood Spots	Visit these three lakefront seafood gems...	7	2025-03-23 03:35:45.858643	t
+7	Avoiding Shallow Zones	Always keep your eyes on the sonar here...	8	2025-03-23 03:35:45.858643	f
+8	Night Navigation Guide	Use the west-facing lighthouse as your landmark...	1	2025-03-23 03:35:45.858643	t
+9	Best Photo Spots	Get the perfect sunset shot from this dock...	2	2025-03-23 03:35:45.858643	t
+10	Supplies Checklist	Always carry these essentials before setting out...	3	2025-03-23 03:35:45.858643	t
 \.
 
 
 --
--- TOC entry 5032 (class 0 OID 16517)
+-- TOC entry 5045 (class 0 OID 16517)
 -- Dependencies: 234
 -- Data for Name: Images; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -715,7 +765,33 @@ COPY public."Images" ("Id", "Url", "CreatedBy", "CreatedOn", "GuideId") FROM std
 
 
 --
--- TOC entry 5038 (class 0 OID 16572)
+-- TOC entry 5053 (class 0 OID 16824)
+-- Dependencies: 242
+-- Data for Name: Locations; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Locations" ("Id", "CreatedOn", "Latitude", "Longitude", "Town", "PortId", "DockingSpotId") FROM stdin;
+1	2025-03-23 16:39:12.502318	53.9629082	21.747343	Bogaczewo	1	\N
+2	2025-03-23 16:39:12.502318	54.0313983	21.7679876	Gizycko	2	\N
+3	2025-03-23 16:39:12.502318	54.2112981	21.9341086	Zloty Port	3	\N
+4	2025-03-23 16:39:12.502318	53.9818273	21.7019281	Kamienna	4	\N
+5	2025-03-23 16:39:12.502318	54.0451721	21.7639123	Nowy Harbor	5	\N
+6	2025-03-23 16:39:12.502318	53.963	21.748	Bogaczewo	\N	1
+7	2025-03-23 16:39:12.502318	53.961	21.746	Bogaczewo	\N	2
+8	2025-03-23 16:39:12.502318	54.032	21.768	Gizycko	\N	3
+9	2025-03-23 16:39:12.502318	54.03	21.766	Gizycko	\N	4
+10	2025-03-23 16:39:12.502318	53.9667789	21.7483321	Bogaczewo	\N	5
+11	2025-03-23 16:39:12.502318	53.9681221	21.7499123	Bogaczewo	\N	6
+12	2025-03-23 16:39:12.502318	53.9809821	21.7038123	Kamienna	4	7
+13	2025-03-23 16:39:12.502318	54.0150123	21.7638876	Nowy Harbor	5	8
+14	2025-03-23 16:39:12.502318	54.0321123	21.7698876	Laguna	6	9
+15	2025-03-23 16:39:12.502318	53.9691223	21.7423371	Hidden	7	10
+16	2025-03-23 16:39:12.502318	54	21.75	Standalone Town	\N	\N
+\.
+
+
+--
+-- TOC entry 5051 (class 0 OID 16572)
 -- Dependencies: 240
 -- Data for Name: Notifications; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -735,37 +811,37 @@ COPY public."Notifications" ("Id", "CreatedBy", "Message", "CreatedOn") FROM std
 
 
 --
--- TOC entry 5028 (class 0 OID 16489)
+-- TOC entry 5041 (class 0 OID 16489)
 -- Dependencies: 230
 -- Data for Name: PaymentMethods; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public."PaymentMethods" ("Id", "Name") FROM stdin;
-1	Online
-2	On-site
+COPY public."PaymentMethods" ("Id", "Name", "CreatedOn") FROM stdin;
+1	Online	2025-03-23 16:14:41.947439
+2	On-site	2025-03-23 16:14:41.947439
 \.
 
 
 --
--- TOC entry 5020 (class 0 OID 16412)
+-- TOC entry 5033 (class 0 OID 16412)
 -- Dependencies: 222
 -- Data for Name: Ports; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public."Ports" ("Id", "CreatedOn", "Name", "Location", "Description", "OwnerId", "IsApproved") FROM stdin;
-1	2025-03-23 02:40:57.901704	Bogaczewo	{"Town": "Bogaczewo", "Latitude": 53.9629082, "Longitude": 21.747343}	\N	3	t
-2	2025-03-23 02:40:57.901704	Gizycko	{"Town": "Gizycko", "Latitude": 54.0313983, "Longitude": 21.7679876}	\N	3	t
-3	2025-03-23 03:36:33.736456	Zloty Port	{"Town": "Zloty Port", "Latitude": 54.2112981, "Longitude": 21.9341086}	\N	3	t
-4	2025-03-23 03:36:33.736456	Kamienna	{"Town": "Kamienna", "Latitude": 53.9818273, "Longitude": 21.7019281}	\N	3	t
-5	2025-03-23 03:36:33.736456	Nowy Harbor	{"Town": "Nowy Harbor", "Latitude": 54.0451721, "Longitude": 21.7639123}	\N	3	t
-6	2025-03-23 03:36:33.736456	Laguna	{"Town": "Laguna", "Latitude": 54.0312372, "Longitude": 21.7658123}	\N	3	t
-7	2025-03-23 03:36:33.736456	Szczecinek Marina	{"Town": "Szczecinek", "Latitude": 54.0358732, "Longitude": 21.7643212}	\N	3	t
-8	2025-03-23 03:36:33.736456	Hidden Dock	{"Town": "Hidden", "Latitude": 53.9672211, "Longitude": 21.7441221}	\N	3	t
+COPY public."Ports" ("Id", "CreatedOn", "Name", "Description", "OwnerId", "IsApproved") FROM stdin;
+1	2025-03-23 02:40:57.901704	Bogaczewo	\N	3	t
+2	2025-03-23 02:40:57.901704	Gizycko	\N	3	t
+3	2025-03-23 03:36:33.736456	Zloty Port	\N	3	t
+4	2025-03-23 03:36:33.736456	Kamienna	\N	3	t
+5	2025-03-23 03:36:33.736456	Nowy Harbor	\N	3	t
+6	2025-03-23 03:36:33.736456	Laguna	\N	3	t
+7	2025-03-23 03:36:33.736456	Szczecinek Marina	\N	3	t
+8	2025-03-23 03:36:33.736456	Hidden Dock	\N	3	t
 \.
 
 
 --
--- TOC entry 5036 (class 0 OID 16557)
+-- TOC entry 5049 (class 0 OID 16557)
 -- Dependencies: 238
 -- Data for Name: Reviews; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -785,20 +861,20 @@ COPY public."Reviews" ("Id", "CreatedBy", "Rating", "Comment", "CreatedOn", "Por
 
 
 --
--- TOC entry 5018 (class 0 OID 16398)
+-- TOC entry 5031 (class 0 OID 16398)
 -- Dependencies: 220
 -- Data for Name: Roles; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public."Roles" ("Id", "Name") FROM stdin;
-1	User
-2	Admin
-3	Owner
+COPY public."Roles" ("Id", "Name", "CreatedOn") FROM stdin;
+1	User	2025-03-23 16:14:41.947439
+2	Admin	2025-03-23 16:14:41.947439
+3	Owner	2025-03-23 16:14:41.947439
 \.
 
 
 --
--- TOC entry 5024 (class 0 OID 16449)
+-- TOC entry 5037 (class 0 OID 16449)
 -- Dependencies: 226
 -- Data for Name: Services; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -818,7 +894,7 @@ COPY public."Services" ("Id", "Name", "Description", "Price", "PortId", "Docking
 
 
 --
--- TOC entry 5016 (class 0 OID 16388)
+-- TOC entry 5029 (class 0 OID 16388)
 -- Dependencies: 218
 -- Data for Name: Users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -838,7 +914,16 @@ COPY public."Users" ("Id", "CreatedOn", "Name", "Surname", "Email", "PhoneNumber
 
 
 --
--- TOC entry 5056 (class 0 OID 0)
+-- TOC entry 5072 (class 0 OID 0)
+-- Dependencies: 241
+-- Name: Locations_Id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Locations_Id_seq"', 16, true);
+
+
+--
+-- TOC entry 5073 (class 0 OID 0)
 -- Dependencies: 227
 -- Name: bookings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -847,7 +932,7 @@ SELECT pg_catalog.setval('public.bookings_id_seq', 1, false);
 
 
 --
--- TOC entry 5057 (class 0 OID 0)
+-- TOC entry 5074 (class 0 OID 0)
 -- Dependencies: 235
 -- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -856,7 +941,7 @@ SELECT pg_catalog.setval('public.comments_id_seq', 10, true);
 
 
 --
--- TOC entry 5058 (class 0 OID 0)
+-- TOC entry 5075 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: dockingspots_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -865,7 +950,7 @@ SELECT pg_catalog.setval('public.dockingspots_id_seq', 10, true);
 
 
 --
--- TOC entry 5059 (class 0 OID 0)
+-- TOC entry 5076 (class 0 OID 0)
 -- Dependencies: 231
 -- Name: guides_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -874,7 +959,7 @@ SELECT pg_catalog.setval('public.guides_id_seq', 10, true);
 
 
 --
--- TOC entry 5060 (class 0 OID 0)
+-- TOC entry 5077 (class 0 OID 0)
 -- Dependencies: 233
 -- Name: images_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -883,7 +968,7 @@ SELECT pg_catalog.setval('public.images_id_seq', 10, true);
 
 
 --
--- TOC entry 5061 (class 0 OID 0)
+-- TOC entry 5078 (class 0 OID 0)
 -- Dependencies: 239
 -- Name: notifications_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -892,7 +977,7 @@ SELECT pg_catalog.setval('public.notifications_id_seq', 10, true);
 
 
 --
--- TOC entry 5062 (class 0 OID 0)
+-- TOC entry 5079 (class 0 OID 0)
 -- Dependencies: 229
 -- Name: paymentmethods_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -901,7 +986,7 @@ SELECT pg_catalog.setval('public.paymentmethods_id_seq', 2, true);
 
 
 --
--- TOC entry 5063 (class 0 OID 0)
+-- TOC entry 5080 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: port_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -910,7 +995,7 @@ SELECT pg_catalog.setval('public.port_id_seq', 8, true);
 
 
 --
--- TOC entry 5064 (class 0 OID 0)
+-- TOC entry 5081 (class 0 OID 0)
 -- Dependencies: 237
 -- Name: reviews_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -919,7 +1004,7 @@ SELECT pg_catalog.setval('public.reviews_id_seq', 10, true);
 
 
 --
--- TOC entry 5065 (class 0 OID 0)
+-- TOC entry 5082 (class 0 OID 0)
 -- Dependencies: 219
 -- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -928,7 +1013,7 @@ SELECT pg_catalog.setval('public.roles_id_seq', 3, true);
 
 
 --
--- TOC entry 5066 (class 0 OID 0)
+-- TOC entry 5083 (class 0 OID 0)
 -- Dependencies: 225
 -- Name: services_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -937,7 +1022,7 @@ SELECT pg_catalog.setval('public.services_id_seq', 10, true);
 
 
 --
--- TOC entry 5067 (class 0 OID 0)
+-- TOC entry 5084 (class 0 OID 0)
 -- Dependencies: 217
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -946,7 +1031,7 @@ SELECT pg_catalog.setval('public.users_id_seq', 10, true);
 
 
 --
--- TOC entry 4840 (class 2606 OID 16476)
+-- TOC entry 4849 (class 2606 OID 16476)
 -- Name: Bookings Bookings_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -955,7 +1040,7 @@ ALTER TABLE ONLY public."Bookings"
 
 
 --
--- TOC entry 4848 (class 2606 OID 16545)
+-- TOC entry 4857 (class 2606 OID 16545)
 -- Name: Comments Comments_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -964,7 +1049,7 @@ ALTER TABLE ONLY public."Comments"
 
 
 --
--- TOC entry 4836 (class 2606 OID 16437)
+-- TOC entry 4845 (class 2606 OID 16437)
 -- Name: DockingSpots DockingSpots_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -973,7 +1058,7 @@ ALTER TABLE ONLY public."DockingSpots"
 
 
 --
--- TOC entry 4844 (class 2606 OID 16510)
+-- TOC entry 4853 (class 2606 OID 16510)
 -- Name: Guides Guides_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -982,7 +1067,7 @@ ALTER TABLE ONLY public."Guides"
 
 
 --
--- TOC entry 4846 (class 2606 OID 16525)
+-- TOC entry 4855 (class 2606 OID 16525)
 -- Name: Images Images_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -991,7 +1076,16 @@ ALTER TABLE ONLY public."Images"
 
 
 --
--- TOC entry 4852 (class 2606 OID 16580)
+-- TOC entry 4863 (class 2606 OID 16830)
+-- Name: Locations Locations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Locations"
+    ADD CONSTRAINT "Locations_pkey" PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 4861 (class 2606 OID 16580)
 -- Name: Notifications Notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1000,7 +1094,7 @@ ALTER TABLE ONLY public."Notifications"
 
 
 --
--- TOC entry 4842 (class 2606 OID 16494)
+-- TOC entry 4851 (class 2606 OID 16494)
 -- Name: PaymentMethods PaymentMethods_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1009,7 +1103,7 @@ ALTER TABLE ONLY public."PaymentMethods"
 
 
 --
--- TOC entry 4834 (class 2606 OID 16421)
+-- TOC entry 4843 (class 2606 OID 16421)
 -- Name: Ports Ports_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1018,7 +1112,7 @@ ALTER TABLE ONLY public."Ports"
 
 
 --
--- TOC entry 4850 (class 2606 OID 16565)
+-- TOC entry 4859 (class 2606 OID 16565)
 -- Name: Reviews Reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1027,7 +1121,7 @@ ALTER TABLE ONLY public."Reviews"
 
 
 --
--- TOC entry 4830 (class 2606 OID 16405)
+-- TOC entry 4839 (class 2606 OID 16405)
 -- Name: Roles Roles_Name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1036,7 +1130,7 @@ ALTER TABLE ONLY public."Roles"
 
 
 --
--- TOC entry 4832 (class 2606 OID 16403)
+-- TOC entry 4841 (class 2606 OID 16403)
 -- Name: Roles Roles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1045,7 +1139,7 @@ ALTER TABLE ONLY public."Roles"
 
 
 --
--- TOC entry 4838 (class 2606 OID 16457)
+-- TOC entry 4847 (class 2606 OID 16457)
 -- Name: Services Services_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1054,7 +1148,7 @@ ALTER TABLE ONLY public."Services"
 
 
 --
--- TOC entry 4826 (class 2606 OID 16396)
+-- TOC entry 4835 (class 2606 OID 16396)
 -- Name: Users Users_Email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1063,7 +1157,7 @@ ALTER TABLE ONLY public."Users"
 
 
 --
--- TOC entry 4828 (class 2606 OID 16394)
+-- TOC entry 4837 (class 2606 OID 16394)
 -- Name: Users Users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1072,7 +1166,7 @@ ALTER TABLE ONLY public."Users"
 
 
 --
--- TOC entry 4824 (class 1259 OID 16587)
+-- TOC entry 4833 (class 1259 OID 16587)
 -- Name: IDX_Users_Email; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1080,7 +1174,7 @@ CREATE UNIQUE INDEX "IDX_Users_Email" ON public."Users" USING btree ("Email");
 
 
 --
--- TOC entry 4862 (class 2606 OID 16511)
+-- TOC entry 4873 (class 2606 OID 16511)
 -- Name: Guides FK_AuthorId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1089,7 +1183,7 @@ ALTER TABLE ONLY public."Guides"
 
 
 --
--- TOC entry 4863 (class 2606 OID 16526)
+-- TOC entry 4874 (class 2606 OID 16526)
 -- Name: Images FK_CreatedBy; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1098,7 +1192,7 @@ ALTER TABLE ONLY public."Images"
 
 
 --
--- TOC entry 4865 (class 2606 OID 16546)
+-- TOC entry 4876 (class 2606 OID 16546)
 -- Name: Comments FK_CreatedBy; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1107,7 +1201,7 @@ ALTER TABLE ONLY public."Comments"
 
 
 --
--- TOC entry 4867 (class 2606 OID 16566)
+-- TOC entry 4878 (class 2606 OID 16566)
 -- Name: Reviews FK_CreatedBy; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1116,7 +1210,7 @@ ALTER TABLE ONLY public."Reviews"
 
 
 --
--- TOC entry 4869 (class 2606 OID 16581)
+-- TOC entry 4880 (class 2606 OID 16581)
 -- Name: Notifications FK_CreatedBy; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1125,7 +1219,7 @@ ALTER TABLE ONLY public."Notifications"
 
 
 --
--- TOC entry 4857 (class 2606 OID 16463)
+-- TOC entry 4868 (class 2606 OID 16463)
 -- Name: Services FK_DockingSpotId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1134,7 +1228,7 @@ ALTER TABLE ONLY public."Services"
 
 
 --
--- TOC entry 4859 (class 2606 OID 16482)
+-- TOC entry 4870 (class 2606 OID 16482)
 -- Name: Bookings FK_DockingSpotId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1143,7 +1237,16 @@ ALTER TABLE ONLY public."Bookings"
 
 
 --
--- TOC entry 4864 (class 2606 OID 16531)
+-- TOC entry 4881 (class 2606 OID 16836)
+-- Name: Locations FK_DockingSpotId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Locations"
+    ADD CONSTRAINT "FK_DockingSpotId" FOREIGN KEY ("DockingSpotId") REFERENCES public."DockingSpots"("Id");
+
+
+--
+-- TOC entry 4875 (class 2606 OID 16531)
 -- Name: Images FK_GuideId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1152,7 +1255,7 @@ ALTER TABLE ONLY public."Images"
 
 
 --
--- TOC entry 4866 (class 2606 OID 16551)
+-- TOC entry 4877 (class 2606 OID 16551)
 -- Name: Comments FK_GuideId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1161,7 +1264,7 @@ ALTER TABLE ONLY public."Comments"
 
 
 --
--- TOC entry 4854 (class 2606 OID 16422)
+-- TOC entry 4865 (class 2606 OID 16422)
 -- Name: Ports FK_OwnerId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1170,7 +1273,7 @@ ALTER TABLE ONLY public."Ports"
 
 
 --
--- TOC entry 4855 (class 2606 OID 16438)
+-- TOC entry 4866 (class 2606 OID 16438)
 -- Name: DockingSpots FK_OwnerId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1179,7 +1282,7 @@ ALTER TABLE ONLY public."DockingSpots"
 
 
 --
--- TOC entry 4860 (class 2606 OID 16495)
+-- TOC entry 4871 (class 2606 OID 16495)
 -- Name: Bookings FK_PaymentMethodId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1188,7 +1291,7 @@ ALTER TABLE ONLY public."Bookings"
 
 
 --
--- TOC entry 4856 (class 2606 OID 16443)
+-- TOC entry 4867 (class 2606 OID 16443)
 -- Name: DockingSpots FK_PortId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1197,7 +1300,7 @@ ALTER TABLE ONLY public."DockingSpots"
 
 
 --
--- TOC entry 4858 (class 2606 OID 16458)
+-- TOC entry 4869 (class 2606 OID 16458)
 -- Name: Services FK_PortId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1206,7 +1309,7 @@ ALTER TABLE ONLY public."Services"
 
 
 --
--- TOC entry 4868 (class 2606 OID 16588)
+-- TOC entry 4879 (class 2606 OID 16588)
 -- Name: Reviews FK_PortId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1215,7 +1318,16 @@ ALTER TABLE ONLY public."Reviews"
 
 
 --
--- TOC entry 4853 (class 2606 OID 16406)
+-- TOC entry 4882 (class 2606 OID 16831)
+-- Name: Locations FK_PortId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Locations"
+    ADD CONSTRAINT "FK_PortId" FOREIGN KEY ("PortId") REFERENCES public."Ports"("Id");
+
+
+--
+-- TOC entry 4864 (class 2606 OID 16406)
 -- Name: Users FK_RoleId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1224,7 +1336,7 @@ ALTER TABLE ONLY public."Users"
 
 
 --
--- TOC entry 4861 (class 2606 OID 16477)
+-- TOC entry 4872 (class 2606 OID 16477)
 -- Name: Bookings FK_SailorId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1232,7 +1344,7 @@ ALTER TABLE ONLY public."Bookings"
     ADD CONSTRAINT "FK_SailorId" FOREIGN KEY ("SailorId") REFERENCES public."Users"("Id");
 
 
--- Completed on 2025-03-23 03:57:20
+-- Completed on 2025-03-23 16:41:56
 
 --
 -- PostgreSQL database dump complete
