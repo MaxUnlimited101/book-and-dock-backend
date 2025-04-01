@@ -1,3 +1,8 @@
+using Backend.Data;
+using Backend.Interfaces;
+using Backend.Repositories;
+using Backend.Services;
+
 namespace Backend;
 
 public class Program
@@ -16,6 +21,19 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        // Add context
+        builder.Services.AddNpgsql<BookAndDockContext>(builder.Configuration.GetConnectionString("postgres"));
+        
+        // Add repositories
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IDockRepository, DockRepository>();
+        builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+        
+        // Add services
+        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IDockService, DockService>();
+        builder.Services.AddScoped<IBookingService, BookingService>();
+        
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
