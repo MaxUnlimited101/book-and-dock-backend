@@ -1,3 +1,6 @@
+using Backend.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace Backend;
 
 public class Program
@@ -8,13 +11,18 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddAuthorization();
-        
+        builder.Services.AddScoped<RegistrationService>();
+
         // Add controllers
         builder.Services.AddControllers();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+
+        builder.Services.AddDbContext<BookAndDockContext>(options =>
+            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+        );
 
         var app = builder.Build();
 

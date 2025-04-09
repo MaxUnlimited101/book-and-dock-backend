@@ -43,8 +43,7 @@ public partial class BookAndDockContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=BookAndDock;Username=postgres;Password=postgres");
+        => optionsBuilder.UseNpgsql("Name=DefaultConnection");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -53,9 +52,7 @@ public partial class BookAndDockContext : DbContext
             entity.HasKey(e => e.Id).HasName("Bookings_pkey");
 
             entity.Property(e => e.Id).HasDefaultValueSql("nextval('bookings_id_seq'::regclass)");
-            entity.Property(e => e.CreatedOn)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasDefaultValueSql("now()");
             entity.Property(e => e.IsPaid).HasDefaultValue(false);
 
             entity.HasOne(d => d.DockingSpot).WithMany(p => p.Bookings)
@@ -79,9 +76,7 @@ public partial class BookAndDockContext : DbContext
             entity.HasKey(e => e.Id).HasName("Comments_pkey");
 
             entity.Property(e => e.Id).HasDefaultValueSql("nextval('comments_id_seq'::regclass)");
-            entity.Property(e => e.CreatedOn)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasDefaultValueSql("now()");
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.CreatedBy)
@@ -97,9 +92,7 @@ public partial class BookAndDockContext : DbContext
             entity.HasKey(e => e.Id).HasName("DockingSpots_pkey");
 
             entity.Property(e => e.Id).HasDefaultValueSql("nextval('dockingspots_id_seq'::regclass)");
-            entity.Property(e => e.CreatedOn)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasDefaultValueSql("now()");
             entity.Property(e => e.IsAvailable).HasDefaultValue(true);
             entity.Property(e => e.Name).HasMaxLength(100);
 
@@ -119,9 +112,7 @@ public partial class BookAndDockContext : DbContext
             entity.HasKey(e => e.Id).HasName("Guides_pkey");
 
             entity.Property(e => e.Id).HasDefaultValueSql("nextval('guides_id_seq'::regclass)");
-            entity.Property(e => e.CreatedOn)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasDefaultValueSql("now()");
             entity.Property(e => e.IsApproved).HasDefaultValue(false);
             entity.Property(e => e.Title).HasMaxLength(100);
 
@@ -135,9 +126,7 @@ public partial class BookAndDockContext : DbContext
             entity.HasKey(e => e.Id).HasName("Images_pkey");
 
             entity.Property(e => e.Id).HasDefaultValueSql("nextval('images_id_seq'::regclass)");
-            entity.Property(e => e.CreatedOn)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasDefaultValueSql("now()");
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Images)
                 .HasForeignKey(d => d.CreatedBy)
@@ -152,9 +141,7 @@ public partial class BookAndDockContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("Locations_pkey");
 
-            entity.Property(e => e.CreatedOn)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasDefaultValueSql("now()");
             entity.Property(e => e.Town).HasMaxLength(100);
 
             entity.HasOne(d => d.DockingSpot).WithMany(p => p.Locations)
@@ -171,9 +158,7 @@ public partial class BookAndDockContext : DbContext
             entity.HasKey(e => e.Id).HasName("Notifications_pkey");
 
             entity.Property(e => e.Id).HasDefaultValueSql("nextval('notifications_id_seq'::regclass)");
-            entity.Property(e => e.CreatedOn)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasDefaultValueSql("now()");
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Notifications)
                 .HasForeignKey(d => d.CreatedBy)
@@ -185,9 +170,7 @@ public partial class BookAndDockContext : DbContext
             entity.HasKey(e => e.Id).HasName("PaymentMethods_pkey");
 
             entity.Property(e => e.Id).HasDefaultValueSql("nextval('paymentmethods_id_seq'::regclass)");
-            entity.Property(e => e.CreatedOn)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasDefaultValueSql("now()");
             entity.Property(e => e.Name).HasMaxLength(20);
         });
 
@@ -196,9 +179,7 @@ public partial class BookAndDockContext : DbContext
             entity.HasKey(e => e.Id).HasName("Ports_pkey");
 
             entity.Property(e => e.Id).HasDefaultValueSql("nextval('port_id_seq'::regclass)");
-            entity.Property(e => e.CreatedOn)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasDefaultValueSql("now()");
             entity.Property(e => e.IsApproved).HasDefaultValue(false);
             entity.Property(e => e.Name).HasMaxLength(255);
 
@@ -213,9 +194,7 @@ public partial class BookAndDockContext : DbContext
             entity.HasKey(e => e.Id).HasName("Reviews_pkey");
 
             entity.Property(e => e.Id).HasDefaultValueSql("nextval('reviews_id_seq'::regclass)");
-            entity.Property(e => e.CreatedOn)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasDefaultValueSql("now()");
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Reviews)
                 .HasForeignKey(d => d.CreatedBy)
@@ -234,9 +213,7 @@ public partial class BookAndDockContext : DbContext
             entity.HasIndex(e => e.Name, "Roles_Name_key").IsUnique();
 
             entity.Property(e => e.Id).HasDefaultValueSql("nextval('roles_id_seq'::regclass)");
-            entity.Property(e => e.CreatedOn)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasDefaultValueSql("now()");
             entity.Property(e => e.Name).HasMaxLength(20);
         });
 
@@ -245,9 +222,7 @@ public partial class BookAndDockContext : DbContext
             entity.HasKey(e => e.Id).HasName("Services_pkey");
 
             entity.Property(e => e.Id).HasDefaultValueSql("nextval('services_id_seq'::regclass)");
-            entity.Property(e => e.CreatedOn)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasDefaultValueSql("now()");
             entity.Property(e => e.IsAvailable).HasDefaultValue(true);
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Price).HasPrecision(10, 2);
@@ -270,9 +245,7 @@ public partial class BookAndDockContext : DbContext
             entity.HasIndex(e => e.Email, "Users_Email_key").IsUnique();
 
             entity.Property(e => e.Id).HasDefaultValueSql("nextval('users_id_seq'::regclass)");
-            entity.Property(e => e.CreatedOn)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedOn).HasDefaultValueSql("now()");
             entity.Property(e => e.Email).HasMaxLength(50);
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Password).HasMaxLength(255);
