@@ -8,10 +8,12 @@ namespace Backend.Controllers
     public class AuthController : ControllerBase
     {
         private readonly RegistrationService _registrationService;
+        private readonly AuthenticationService _authenticationService;
 
-        public AuthController(RegistrationService registrationService)
+        public AuthController(RegistrationService registrationService, AuthenticationService authenticationService)
         {
             _registrationService = registrationService;
+            _authenticationService = authenticationService;
         }
 
         [HttpPost("register")]
@@ -30,6 +32,25 @@ namespace Backend.Controllers
             catch (Exception ex)
             {
                 return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }              
+
+            try
+            {
+                var token = await _authenticationService.AuthenticateAsync(request);
+                return Ok(new { token });
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized(new { error = ex.Message });
             }
         }
     }
