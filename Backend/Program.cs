@@ -1,3 +1,10 @@
+using Backend.Data;
+using Backend.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 namespace Backend;
 
 public class Program
@@ -8,13 +15,37 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddAuthorization();
-        
+        builder.Services.AddScoped<RegistrationService>();
+        builder.Services.AddScoped<JwtService>();
+        builder.Services.AddScoped<AuthenticationService>();
+
         // Add controllers
         builder.Services.AddControllers();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+
+        builder.Services.AddDbContext<BookAndDockContext>(options =>
+            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+        );
+
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                ValidAudience = builder.Configuration["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
+                )
+            };
+        });
 
         var app = builder.Build();
 
@@ -26,7 +57,7 @@ public class Program
         }
 
         app.UseHttpsRedirection();
-
+        app.UseAuthentication();
         app.UseAuthorization();
         
         app.MapControllers();
