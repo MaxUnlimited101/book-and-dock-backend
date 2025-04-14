@@ -1,4 +1,5 @@
 using Backend.DTO;
+using Backend.DTO.Review;
 using Backend.Interfaces;
 using Backend.Models;
 using Backend.Services;
@@ -30,5 +31,11 @@ public class DockController : ControllerBase
             servicesList = services.Split(",").ToList();
         var docks = await _dockService.GetAvailableDocksAsync(location, date, price, servicesList, availability);
         return Ok(docks.Select(ds => DockingSpotReturnDto.FromModel(ds)).ToList());
+    }
+
+    [HttpPost("{id}/reviews")]
+    public async Task<ActionResult<StatusReturnDto>> CreateReview([FromRoute] int id, [FromBody] CreateReviewDTO reviewDto)
+    {
+        throw new NotImplementedException();
     }
 }

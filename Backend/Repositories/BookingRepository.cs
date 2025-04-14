@@ -19,4 +19,15 @@ public class BookingRepository : IBookingRepository
         _context.SaveChanges();
         return id;
     }
+
+    public void Delete(int id)
+    {
+        _context.Bookings.Remove(_context.Bookings.Find(id)!);
+        _context.SaveChanges();
+    }
+
+    public bool CheckIfExistsById(int id)
+    {
+        return _context.Bookings.Find(id) != null;
+    }
 }

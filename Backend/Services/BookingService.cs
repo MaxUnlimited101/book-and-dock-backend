@@ -39,4 +39,16 @@ public class BookingService : IBookingService
         
         return _bookingRepository.Create(b);
     }
+
+    public void Delete(int id)
+    {
+        if (_bookingRepository.CheckIfExistsById(id))
+        {
+            _bookingRepository.Delete(id);
+        }
+        else
+        {
+            throw new ModelNotFoundException("Invalid booking id");
+        }
+    }
 }

@@ -15,18 +15,33 @@ public class BookingController : ControllerBase
     {
         _bookingService = bookingService;
     }
-    
+
     [HttpPost]
-    public ActionResult<StatusReturnDto> CreateBooking([FromBody]CreateBookingDto createBookingDto)
+    public async Task<ActionResult<StatusReturnDto>> Create([FromBody] CreateBookingDto createBookingDto)
     {
         try
         {
             int id = _bookingService.Create(createBookingDto);
-            return Ok(new StatusReturnDto("Booking created successfully, id given", id));
+            return await Task.FromResult(
+                Ok(new StatusReturnDto("Booking created successfully, id given", id)));
         }
         catch (ModelAlreadyExistsException e)
         {
-            return StatusCode(500, new StatusReturnDto(e.Message, null));
+            return await Task.FromResult(StatusCode(401, new StatusReturnDto(e.Message, null)));
+        }
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<StatusReturnDto>> Delete(int id)
+    {
+        try
+        {
+            _bookingService.Delete(id);
+            return await Task.FromResult(Ok(new StatusReturnDto("Booking deleted successfully, id given", id)));
+        }
+        catch (ModelNotFoundException e)
+        {
+            return await Task.FromResult(StatusCode(401, new StatusReturnDto(e.Message, null)));
         }
     }
 }
