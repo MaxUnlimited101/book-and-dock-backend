@@ -1,0 +1,90 @@
+### Post new guide
+POST /guides
+Host: {{Backend_HostAddress}}
+Content-Type: application/json
+
+{
+  "title": "Exploring Lomza",
+  "content": "A guide to the best spots in Lomza.",
+  "authorID": 301,
+  "publicationDate": "2022-07-01",
+  "pictures": [
+    {
+      "url": "https://example.com/lomza1.jpg",
+      "description": "A scenic view of Lomza's Old Town."
+    },
+    {
+      "url": "https://example.com/lomza2.jpg",
+      "description": "The Narew River in Lomza."
+    }
+  ],
+  "links": [
+    {
+      "url": "https://tourism.lomza.com",
+      "description": "Official Lomza Tourism Website"
+    },
+    {
+      "url": "https://example.com/best-cafes-lomza",
+      "description": "Top cafes to visit in Lomza"
+    }
+  ]
+}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
+
+### Put (update) exising guide in system
+PUT /guides/1
+Host: {{Backend_HostAddress}}
+Content-Type: application/json
+
+{
+  "title": "Exploring Lomza",
+  "content": "A guide to the best spots in Lomza.",
+  "publicationDate": "2022-07-01",
+  "pictures": [
+    {
+      "url": "https://example.com/lomza1.jpg",
+      "description": "A scenic view of Lomza's Old Town."
+    },
+    {
+      "url": "https://example.com/lomza2.jpg",
+      "description": "The Narew River in Lomza."
+    }
+  ],
+  "links": [
+    {
+      "url": "https://tourism.lomza.com",
+      "description": "Official Lomza Tourism Website"
+    },
+    {
+      "url": "https://example.com/best-cafes-lomza",
+      "description": "Top cafes to visit in Lomza"
+    }
+  ]
+}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
+
+### Delete a guide
+DELETE /guides/1
+Host: {{Backend_HostAddress}}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
