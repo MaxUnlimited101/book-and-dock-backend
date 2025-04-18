@@ -30,4 +30,18 @@ public class BookingRepository : IBookingRepository
     {
         return _context.Bookings.Find(id) != null;
     }
+
+    public Booking? GetById(int id)
+    {
+        return _context.Bookings.Find(id);
+    }
+    public List<Booking> GetAll()
+    {
+        return _context.Bookings.ToList();
+    }
+    public void Update(Booking booking)
+    {
+        _context.Bookings.Update(booking);
+        _context.SaveChanges();
+    }
 }

@@ -65,4 +65,35 @@ public class DockRepository : IDockRepository
         }
         return false;
     }
+
+    public DockingSpot? GetDockById(int id)
+    {
+        return _context.DockingSpots
+            .Include(d => d.Locations)
+            .Include(d => d.Services)
+            .FirstOrDefault(d => d.Id == id);
+    }
+    public List<DockingSpot> GetAllDocks()
+    {
+        return _context.DockingSpots
+            .Include(d => d.Locations)
+            .Include(d => d.Services)
+            .ToList();
+    }
+    public void UpdateDock(DockingSpot dock)
+    {
+        _context.DockingSpots.Update(dock);
+        _context.SaveChanges();
+    }
+    public int CreateDock(DockingSpot dock)
+    {
+        int id = _context.DockingSpots.Add(dock).Entity.Id;
+        _context.SaveChanges();
+        return id;
+    }
+    public void DeleteDock(int id)
+    {
+        _context.DockingSpots.Remove(_context.DockingSpots.Find(id)!);
+        _context.SaveChanges();
+    }
 }

@@ -12,4 +12,10 @@ public interface IDockRepository
         string? availability = null);
     
     public bool CheckIfDockExistsById(int id);
+
+    public DockingSpot? GetDockById(int id);
+    public List<DockingSpot> GetAllDocks();
+    public void UpdateDock(DockingSpot dock);
+    public int CreateDock(DockingSpot dock);
+    public void DeleteDock(int id);
 }
