@@ -27,12 +27,12 @@ public class BookingService : IBookingService
             throw new ModelNotFoundException("Invalid user");
         }
 
-        if (!_dockService.CheckIfDockExistsById(booking.SailorId))
+        if (!_dockService.CheckIfDockExistsById(booking.DockingSpotId))
         {
             throw new ModelNotFoundException("Invalid dock");
         }
 
-        if (booking.EndDate >= booking.StartDate)
+        if (booking.EndDate <= booking.StartDate)
         {
             throw new InvalidDataException("End date cannot be earlier than start date");
         }

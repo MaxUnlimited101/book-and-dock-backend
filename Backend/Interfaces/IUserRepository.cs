@@ -15,4 +15,15 @@ public interface IUserRepository
     User? GetUserByEmail(string email);
     User? GetUserByUsername(string username);
     List<User> GetUsersByRole(Role role);
+
+    User? GetUserByPhoneNumber(string phoneNumber);
+    Task<List<User>> GetAllUsersByIdAsync();
+    Task<User?> GetUserByIdAsync(int id);
+    Task<User?> GetUserByEmailAsync(string email);
+    Task<User?> GetUserByUsernameAsync(string username);
+    Task<User?> GetUserByPhoneNumberAsync(string phoneNumber);
+    void UpdateUserAsync(User user);
+    Task<int> CreateUserAsync(User user);
+    Task DeleteUserAsync(int id);
+    bool UpdateUserById(int id, User updatedUser);
 }

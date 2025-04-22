@@ -6,5 +6,6 @@ public record CreateBookingDto(
     DateOnly StartDate,
     DateOnly EndDate,
     int People,
-    string Payment
+    string Payment,
+    int DockingSpotId
 );
