@@ -13,12 +13,24 @@ namespace Backend.Services
             _reviewRepository = reviewRepository;
         }
 
+        private ReviewDTO MapToDto(Review review)
+        {
+            return new ReviewDTO(
+                review.Id,
+                review.UserId,
+                review.DockId,
+                review.Rating,       // Correctly added the Rating parameter 
+                review.Content,
+                review.CreatedAt,
+                review.UpdatedAt
+            );
+        }
         public async Task<ReviewDTO> CreateReviewAsync(CreateReviewDTO reviewDto)
         {
             // Map DTO to Review entity.
             var review = new Review
             {
-                UserId = reviewDto.UserId,
+                Id = reviewDto.UserId,
                 DockId = reviewDto.DockId,
                 Rating = reviewDto.Rating,
                 Content = reviewDto.Content,
@@ -60,7 +72,7 @@ namespace Backend.Services
 
             // Update properties.
             existingReview.Rating = reviewDto.Rating;
-            existingReview.Comment = reviewDto.Content;
+            existingReview.Content = reviewDto.Content;
 
             // Update review in repository.
             return await _reviewRepository.UpdateReviewAsync(id, existingReview);

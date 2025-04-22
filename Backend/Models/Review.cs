@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Backend.Models;
 
@@ -7,17 +6,25 @@ public partial class Review
 {
     public int Id { get; set; }
 
-    public int? CreatedBy { get; set; }
+    // Renamed from CreatedBy to UserId.
+    public int UserId { get; set; }
 
     public double Rating { get; set; }
 
-    public string? Comment { get; set; }
+    // Renamed from Comment to Content.
+    public string Content { get; set; } = null!;
 
-    public DateTime? CreatedOn { get; set; }
+    // Renamed from CreatedOn to CreatedAt.
+    public DateTime CreatedAt { get; set; }
 
-    public int PortId { get; set; }
+    // Added UpdatedAt.
+    public DateTime? UpdatedAt { get; set; }
 
-    public virtual User? CreatedByNavigation { get; set; }
+    // Renamed from PortId to DockId to match DTO naming.
+    public int DockId { get; set; }
 
-    public virtual Port Port { get; set; } = null!;
+    // Updated navigation properties accordingly.
+    public virtual User User { get; set; } = null!;
+
+    public virtual Port Dock { get; set; } = null!;
 }
