@@ -9,9 +9,9 @@ public class BookingService : IBookingService
 {
     private readonly IBookingRepository _bookingRepository;
     private readonly IUserService _userRepository;
-    private readonly IDockService _dockService;
+    private readonly IDockingSpotService _dockService;
 
-    public BookingService(IBookingRepository bookingRepository, IUserService userService, IDockService dockService)
+    public BookingService(IBookingRepository bookingRepository, IUserService userService, IDockingSpotService dockService)
     {
         _bookingRepository = bookingRepository;
         _userRepository = userService;

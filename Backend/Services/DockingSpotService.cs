@@ -4,11 +4,11 @@ using Backend.Models;
 
 namespace Backend.Services;
 
-public class DockService : IDockService
+public class DockingSpotService : IDockingSpotService
 {
-    private readonly IDockRepository _dockRepository;
+    private readonly IDockingSpotRepository _dockRepository;
     
-    public DockService(IDockRepository dockRepository)
+    public DockingSpotService(IDockingSpotRepository dockRepository)
     {
         _dockRepository = dockRepository;
     }

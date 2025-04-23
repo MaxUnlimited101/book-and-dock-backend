@@ -2,7 +2,7 @@ using Backend.Models;
 
 namespace Backend.Interfaces;
 
-public interface IDockRepository
+public interface IDockingSpotRepository
 {
     public Task<List<DockingSpot>> GetAvailableDocksAsync(
         string? location = null,

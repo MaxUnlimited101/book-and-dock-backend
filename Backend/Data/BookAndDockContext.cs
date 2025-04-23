@@ -209,19 +209,20 @@ public partial class BookAndDockContext : DbContext
 
         modelBuilder.Entity<Review>(entity =>
         {
+            // might be incorrect
             entity.HasKey(e => e.Id).HasName("Reviews_pkey");
 
             entity.Property(e => e.Id).HasDefaultValueSql("nextval('reviews_id_seq'::regclass)");
-            entity.Property(e => e.CreatedOn)
+            entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Reviews)
-                .HasForeignKey(d => d.CreatedBy)
+            entity.HasOne(d => d.User).WithMany(p => p.Reviews)
+                .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_CreatedBy");
 
-            entity.HasOne(d => d.Port).WithMany(p => p.Reviews)
-                .HasForeignKey(d => d.PortId)
+            entity.HasOne(d => d.Dock).WithMany(p => p.Reviews)
+                .HasForeignKey(d => d.DockId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PortId");
         });

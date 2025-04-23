@@ -26,12 +26,12 @@ public class Program
         
         // Add repositories
         builder.Services.AddScoped<IUserRepository, UserRepository>();
-        builder.Services.AddScoped<IDockRepository, DockRepository>();
+        builder.Services.AddScoped<IDockingSpotRepository, DockingSpotRepository>();
         builder.Services.AddScoped<IBookingRepository, BookingRepository>();
         
         // Add services
         builder.Services.AddScoped<IUserService, UserService>();
-        builder.Services.AddScoped<IDockService, DockService>();
+        builder.Services.AddScoped<IDockingSpotService, DockingSpotService>();
         builder.Services.AddScoped<IBookingService, BookingService>();
         
         var app = builder.Build();

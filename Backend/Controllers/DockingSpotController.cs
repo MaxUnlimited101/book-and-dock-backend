@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace Backend.Controllers;
 
 [ApiController]
-[Route("docks")]
-public class DockController : ControllerBase
+[Route("dockingSpots")]
+public class DockingSpotController : ControllerBase
 {
-    private readonly IDockService _dockService;
+    private readonly IDockingSpotService _dockService;
 
-    public DockController(IDockService dockService)
+    public DockingSpotController(IDockingSpotService dockService)
     {
         _dockService = dockService;
     }

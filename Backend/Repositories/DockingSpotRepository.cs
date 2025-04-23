@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories;
 
-public class DockRepository : IDockRepository
+public class DockingSpotRepository : IDockingSpotRepository
 {
     private readonly BookAndDockContext _context;
 
-    public DockRepository(BookAndDockContext context)
+    public DockingSpotRepository(BookAndDockContext context)
     {
         _context = context;
     }
