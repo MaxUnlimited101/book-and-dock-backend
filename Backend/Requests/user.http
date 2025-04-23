@@ -1,0 +1,73 @@
+### Register new user
+POST /usr/register
+Host: {{Backend_HostAddress}}
+Content-Type: application/json
+
+{
+  "name": "John",
+  "surname": "Doe",
+  "email": "sailor123@example.com",
+  "password": "securepassword",
+  "phone_number": " 1234567890",
+  "role": "sailor"
+}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
+
+### Login user
+POST /usr/login
+Host: {{Backend_HostAddress}}
+Content-Type: application/json
+
+{
+  "email": "sailor123@example.com",
+  "password": "securepassword"
+}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
+
+### Get users
+GET /admin/users
+Host: {{Backend_HostAddress}}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
+
+### Put (update) an existing user
+PUT /admin/users/your_user_id
+Host: {{Backend_HostAddress}}
+Content-Type: application/json
+
+{
+  "name": "John",
+  "surname": "Doe",
+  "email": "sailor123@example.com",
+  "password": "securepassword",
+  "phone_number": "1234567890",
+  "role": "sailor"
+}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}

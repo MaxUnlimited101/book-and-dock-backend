@@ -1,0 +1,81 @@
+### Post new port
+POST /ports
+Host: {{Backend_HostAddress}}
+
+{
+  "name": "Lomza Dock",
+  "location": {
+    "latitude": 54.12345,
+    "longitude": 21.12345,
+    "town": "Lomza"
+  },
+  "description": "A beautiful dock in Lomza.",
+  "ownerID": 201,
+  "dockingSpots": [
+    {
+      "availability": "Available",
+      "price_per_night": "10",
+      "price_per_person": null
+    }
+  ],
+  "services": [
+    "electricity",
+    "water",
+    "shower"
+  ]
+}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
+
+### Put (update) an existing port
+PUT /ports/1
+Host: {{Backend_HostAddress}}
+Content-Type: application/json
+
+{
+  "name": "Lomza Dock",
+  "location": {
+    "latitude": 54.12345,
+    "longitude": 21.12345,
+    "town": "Lomza"
+  },
+  "description": "A beautiful dock in Lomza.",
+  "dockingSpots": [
+    {
+      "availability": "Available",
+      "price_per_night": null,
+      "price_per_person": "15"
+    }
+  ],
+  "services": [
+    "electricity",
+    "water",
+    "shower"
+  ]
+}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
+
+### Delete a post with ceratin id
+DELETE /admin/posts/1
+Host: {{Backend_HostAddress}}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}

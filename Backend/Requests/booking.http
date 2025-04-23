@@ -1,0 +1,79 @@
+### Post new booking
+POST /usr/login
+Host: {{Backend_HostAddress}}
+Content-Type: application/json
+
+{
+  "sailorID": 101,
+  "dockID": 12,
+  "startDate": "2022-08-01",
+  "endDate": "2022-8-05",
+  "people": 2,
+  "payment": "online"
+}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
+
+### Delete booking with id
+DELETE /bookings/1 HTTP/1.1
+Host: {{Backend_HostAddress}}
+
+POST /docks/1/reviews 
+Host: {{Backend_HostAddress}}
+
+{
+  "sailorID": 101,
+  "dockID": 12,
+  "rating": 4,
+  "content": "Great place to dock!"
+}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
+
+### Get bookings made for a port with all fitlers
+GET /dock-owner/bookings?date=2022-08-01,2022-08-05&people=2
+Host: {{Backend_HostAddress}}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
+
+### Get bookings made for a port with only number of people
+GET /dock-owner/bookings?people=2
+Host: {{Backend_HostAddress}}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
+
+### Get bookings made for a port with only date
+GET /dock-owner/bookings?date=2022-08-01,2022-08-05
+Host: {{Backend_HostAddress}}
+
+> {%
+    client.test('Status code', () => {
+        client.assert(response.status === 200, 'Response code is not 200');
+    });
+
+    // TODO: add proper testing
+%}
