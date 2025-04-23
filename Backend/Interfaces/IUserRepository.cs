@@ -26,4 +26,5 @@ public interface IUserRepository
     Task<int> CreateUserAsync(User user);
     Task DeleteUserAsync(int id);
     bool UpdateUserById(int id, User updatedUser);
+    Dictionary<string, int> CountUsersByRoles();
 }

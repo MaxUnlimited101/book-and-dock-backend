@@ -44,10 +44,13 @@ public class Program
         builder.Services.AddScoped<IDockingSpotService, DockingSpotService>();
         builder.Services.AddScoped<IBookingService, BookingService>();
         
+        // Configure Npgsql to map DateTime to timestamp with time zone
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+        
         builder.Services.AddDbContext<BookAndDockContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
         );
-
+        
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -86,7 +89,7 @@ public class Program
         {
             options.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("http://localhost:5173")
+                policy.WithOrigins("http://localhost:5173", "http://localhost:8080")
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });

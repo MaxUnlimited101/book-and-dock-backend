@@ -1,6 +1,7 @@
 using Backend.Data;
 using Backend.Interfaces;
 using Backend.Models;
+using Microsoft.EntityFrameworkCore;
 
 public class UserRepository : IUserRepository
 {
@@ -117,6 +118,18 @@ public class UserRepository : IUserRepository
         _bookAndDockContext.SaveChanges();
         return true;
     }
+
+    public Dictionary<string, int> CountUsersByRoles()
+    {
+        List<Role> roles = _bookAndDockContext.Roles.Include(role => role.Users).ToList();
+        Dictionary<string, int> roleCount = new();
+        foreach (var role in roles)
+        {
+            roleCount[role.Name] = role.Users.Count;
+        }
+        return roleCount;
+    }
+
     public Task<bool> UpdateUserByIdAsync(int id, User updatedUser)
     {
         var user = _bookAndDockContext.Users.Find(id);

@@ -13,5 +13,7 @@ public interface IUserService
     Task<User> GetUserByEmailAsync(string email);
 
     Task<bool> UpdateUserByIdAsync(int id, User updatedUser);
-    Task DeleteUserByIdAsync(int id);    
+    Task DeleteUserByIdAsync(int id);
+    
+    Dictionary<string, int> CountUsersByRoles();
 }
