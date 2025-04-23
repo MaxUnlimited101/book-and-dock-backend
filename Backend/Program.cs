@@ -91,7 +91,8 @@ public class Program
             {
                 policy.WithOrigins("http://localhost:5173", "http://localhost:8080")
                     .AllowAnyHeader()
-                    .AllowAnyMethod();
+                    .AllowAnyMethod()
+                    .AllowCredentials(); 
             });
         });
 
