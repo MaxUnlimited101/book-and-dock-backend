@@ -11,5 +11,6 @@ namespace Backend.Interfaces
         void AddComment(CommentDto comment);
         void UpdateComment(CommentDto comment);
         void DeleteComment(int id);
+        IEnumerable<Comment> GetCommentsByGuideId(int guideId);
     }
 }

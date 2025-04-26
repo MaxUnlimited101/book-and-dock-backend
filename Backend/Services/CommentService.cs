@@ -66,6 +66,17 @@ public class CommentService : ICommentService
         return comment;
     }
 
+    public IEnumerable<Comment> GetCommentsByGuideId(int guideId)
+    {
+        var guide = _guideRepository.GetGuideById(guideId);
+        if (guide == null)
+        {
+            throw new ModelInvalidException("Guide not found");
+        }
+        var comments = _commentRepository.GetAll().Where(c => c.GuideId == guideId);
+        return comments;
+    }
+
     public void UpdateComment(CommentDto comment)
     {
         var existingComment = _commentRepository.GetById(comment.Id);

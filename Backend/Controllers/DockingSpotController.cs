@@ -1,10 +1,12 @@
 using Backend.DTO;
 using Backend.DTO.Review;
+using Backend.Exceptions;
 using Backend.Interfaces;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Differencing;
 
 namespace Backend.Controllers;
 
@@ -35,45 +37,54 @@ public class DockingSpotController : ControllerBase
         return Ok(docks.Select(ds => DockingSpotReturnDto.FromModel(ds)).ToList());
     }
 
-    // [HttpPost("{id}/reviews")]
-    // public ActionResult<StatusReturnDto> CreateReview([FromRoute] int id, [FromBody] CreateReviewDTO reviewDto)
-    // {
-        
-    // }
+    [HttpPost]
+    public IActionResult CreateDockingSpot([FromBody] DockingSpotDto ds)
+    {
+        try
+        {
+            _dockService.CreateDock(ds);
+            return Created();
+        }
+        catch (ModelInvalidException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 
-    // [HttpPost]
-    // public ActionResult<StatusReturnDto> CreateDockingSpot([FromBody] DockingSpotCreateDto dockingSpotDto)
-    // {
-        
-    // }
+    [HttpPut]
+    public IActionResult UpdateDockingSpot([FromBody] DockingSpotDto ds)
+    {
+        try
+        {
+            _dockService.UpdateDock(ds);
+            return Ok();
+        }
+        catch (ModelInvalidException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 
-    // [HttpPut("{id}")]
-    // public ActionResult<StatusReturnDto> UpdateDockingSpot([FromRoute] int id, [FromBody] DockingSpotUpdateDto dockingSpotDto)
-    // {
-        
-    // }
+    [HttpDelete("{id}")]
+    public IActionResult DeleteDockingSpot([FromRoute] int id)
+    {
+        try
+        {
+            _dockService.DeleteDock(id);
+            return Ok();
+        }
+        catch (ModelInvalidException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 
-    // [HttpDelete("{id}")]
-    // public ActionResult<StatusReturnDto> DeleteDockingSpot([FromRoute] int id)
-    // {
-        
-    // }
-
-    // [HttpGet("{id}")]
-    // public ActionResult<DockingSpotReturnDto> GetDockingSpot([FromRoute] int id)
-    // {
-    //     var dockingSpot = _dockService.GetDockingSpotById(id);
-    //     if (dockingSpot == null)
-    //         return NotFound();
-    //     return Ok(DockingSpotReturnDto.FromModel(dockingSpot));
-    // }
-
-    // [HttpGet("{id}/reviews")]
-    // public ActionResult<IEnumerable<ReviewReturnDto>> GetDockingSpotReviews([FromRoute] int id)
-    // {
-    //     var reviews = _dockService.GetDockingSpotReviews(id);
-    //     if (reviews == null)
-    //         return NotFound();
-    //     return Ok(reviews.Select(r => ReviewReturnDto.FromModel(r)).ToList());
-    // }
+    [HttpGet("{id}")]
+    public IActionResult GetDockingSpot([FromRoute] int id)
+    {
+        var ds = _dockService.GetDockById(id);
+        if (ds == null)
+            return NotFound();
+        return Ok(DockingSpotReturnDto.FromModel(ds));
+    }
 }

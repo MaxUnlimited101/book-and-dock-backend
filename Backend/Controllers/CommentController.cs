@@ -50,8 +50,8 @@ namespace Backend.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public IActionResult UpdateComment(int id, [FromBody] CommentDto comment)
+        [HttpPut]
+        public IActionResult UpdateComment([FromBody] CommentDto comment)
         {
             try 
             {
@@ -75,6 +75,20 @@ namespace Backend.Controllers
             catch (ModelInvalidException ex)
             {
                 return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet("guide/{guideId}")]
+        public IActionResult GetCommentsByGuideId(int guideId)
+        {
+            try 
+            {
+                var comments = _commentService.GetCommentsByGuideId(guideId);
+                return Ok(comments);
+            }
+            catch (ModelInvalidException ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

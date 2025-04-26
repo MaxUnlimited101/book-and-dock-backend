@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Backend.Models;
 using Backend.Interfaces;
 
-namespace Backend.Repositories;
+namespace Backend.Interfaces;
 
 public interface IGuideRepository
 {
