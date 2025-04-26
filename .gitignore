@@ -57,3 +57,6 @@ nunit-*.xml
 
 # Visual Studio temporary files
 .vs/
+
+# User specific files
+.DS_Store

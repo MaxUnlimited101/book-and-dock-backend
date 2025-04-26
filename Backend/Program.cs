@@ -37,11 +37,15 @@ public class Program
         // Add repositories
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IDockingSpotRepository, DockingSpotRepository>();
+        builder.Services.AddScoped<IGuideRepository, GuideRepository>();
+        builder.Services.AddScoped<ICommentRepository, CommentRepository>();
         builder.Services.AddScoped<IBookingRepository, BookingRepository>();
         
         // Add services
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IDockingSpotService, DockingSpotService>();
+        //builder.Services.AddScoped<IGuideService, GuideService>();
+        builder.Services.AddScoped<ICommentService, CommentService>();
         builder.Services.AddScoped<IBookingService, BookingService>();
         
         // Configure Npgsql to map DateTime to timestamp with time zone
