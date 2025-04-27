@@ -13,6 +13,9 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        // Load environment variables
+        DotNetEnv.Env.Load();
+
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
@@ -31,8 +34,33 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        bool is_docker = Environment.GetEnvironmentVariable("IS_DOCKER_CONTAINER") == "TRUE";
+
+        if (is_docker)
+        {
+            Console.WriteLine("Running in Docker container");
+            for (int i = 0; i < 10; i++)
+            {
+                Console.WriteLine("------NOT WORKNING WITOUT MIGRATIONS------");
+            }
+            // Connect to PostgreSQL database in Docker container
+            builder.Services.AddNpgsql<BookAndDockContext>(Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING"));
+            builder.Services.AddDbContext<BookAndDockContext>(options =>
+                options.UseNpgsql(Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING"))
+            );
+        }
+        else
+        {
+            Console.WriteLine("Running in local environment");
+            // Connect to local PostgreSQL database
+            builder.Services.AddNpgsql<BookAndDockContext>(builder.Configuration.GetConnectionString("postgres"));
+            builder.Services.AddDbContext<BookAndDockContext>(options =>
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+            );
+        }
+
         // Add context
-        builder.Services.AddNpgsql<BookAndDockContext>(builder.Configuration.GetConnectionString("postgres"));
+        //builder.Services.AddNpgsql<BookAndDockContext>(builder.Configuration.GetConnectionString("postgres"));
         
         // Add repositories
         builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -69,9 +97,9 @@ public class Program
         // Configure Npgsql to map DateTime to timestamp with time zone
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         
-        builder.Services.AddDbContext<BookAndDockContext>(options =>
-            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
-        );
+        // builder.Services.AddDbContext<BookAndDockContext>(options =>
+        //     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+        // );
         
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -122,11 +150,14 @@ public class Program
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+        // if (app.Environment.IsDevelopment())
+        // {
+        //     app.UseSwagger();
+        //     app.UseSwaggerUI();
+        // }
+        app.UseSwagger();
+        app.UseSwaggerUI();
+
         app.UseCors();
         app.UseHttpsRedirection();
         app.UseAuthentication();

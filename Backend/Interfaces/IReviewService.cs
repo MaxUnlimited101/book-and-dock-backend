@@ -1,4 +1,4 @@
-using Backend.DTO.Review;
+using Backend.DTO;
 using Backend.Models;
 
 namespace Backend.Interfaces

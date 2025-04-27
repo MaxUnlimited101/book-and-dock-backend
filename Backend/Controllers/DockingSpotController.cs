@@ -1,5 +1,4 @@
 using Backend.DTO;
-using Backend.DTO.Review;
 using Backend.Exceptions;
 using Backend.Interfaces;
 using Backend.Models;

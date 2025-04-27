@@ -60,3 +60,5 @@ nunit-*.xml
 
 # User specific files
 .DS_Store
+
+.env
