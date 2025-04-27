@@ -14,7 +14,7 @@ public class DockingSpotRepository : IDockingSpotRepository
         _context = context;
     }
     
-    public Task<List<DockingSpot>> GetAvailableDocksAsync(string? location = null!, 
+    public Task<List<DockingSpot>> GetAvailableDockingSpotsAsync(string? location = null!, 
         DateTime? date = null, decimal? price = null, List<string>? services = null!,
         string? availability = null!)
     {
@@ -57,7 +57,7 @@ public class DockingSpotRepository : IDockingSpotRepository
         return query.ToListAsync();
     }
 
-    public bool CheckIfDockExistsById(int id)
+    public bool CheckIfDockingSpotExistsById(int id)
     {
         if (_context.DockingSpots.Any(d => d.Id == id))
         {
@@ -66,32 +66,32 @@ public class DockingSpotRepository : IDockingSpotRepository
         return false;
     }
 
-    public DockingSpot? GetDockById(int id)
+    public DockingSpot? GetDockingSpotById(int id)
     {
         return _context.DockingSpots
             .Include(d => d.Locations)
             .Include(d => d.Services)
             .FirstOrDefault(d => d.Id == id);
     }
-    public List<DockingSpot> GetAllDocks()
+    public List<DockingSpot> GetAllDockingSpots()
     {
         return _context.DockingSpots
             .Include(d => d.Locations)
             .Include(d => d.Services)
             .ToList();
     }
-    public void UpdateDock(DockingSpot dock)
+    public void UpdateDockingSpot(DockingSpot dock)
     {
         _context.DockingSpots.Update(dock);
         _context.SaveChanges();
     }
-    public int CreateDock(DockingSpot dock)
+    public int CreateDockingSpot(DockingSpot dock)
     {
         int id = _context.DockingSpots.Add(dock).Entity.Id;
         _context.SaveChanges();
         return id;
     }
-    public void DeleteDock(int id)
+    public void DeleteDockingSpot(int id)
     {
         _context.DockingSpots.Remove(_context.DockingSpots.Find(id)!);
         _context.SaveChanges();

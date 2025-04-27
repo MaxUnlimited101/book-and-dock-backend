@@ -14,7 +14,6 @@ namespace Backend.Repositories
             _context = context;
         }
 
-        // CREATE
         public int CreateReview(Review review)
         {
             _context.Reviews.Add(review);
@@ -29,7 +28,6 @@ namespace Backend.Repositories
             return review.Id;
         }
 
-        // READ
         public Review? GetReviewById(int id)
         {
             return _context.Reviews.Find(id);
@@ -50,7 +48,6 @@ namespace Backend.Repositories
             return await _context.Reviews.ToListAsync();
         }
 
-        // UPDATE
         public bool UpdateReview(int id, Review updatedReview)
         {
             var review = _context.Reviews.Find(id);
@@ -75,7 +72,6 @@ namespace Backend.Repositories
             return true;
         }
 
-        // DELETE
         public void DeleteReview(int id)
         {
             var review = _context.Reviews.Find(id);
@@ -94,6 +90,20 @@ namespace Backend.Repositories
                 _context.Reviews.Remove(review);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public Task<IEnumerable<Review>> GetDockingSpotReviewsAsync(int dockingSpotId)
+        {
+            return Task.FromResult(_context.Reviews
+                .Where(r => r.DockId == dockingSpotId)
+                .AsEnumerable());
+        }
+
+        public Task<IEnumerable<Review>> GetUserReviewsAsync(int userId)
+        {
+            return Task.FromResult(_context.Reviews
+                .Where(r => r.UserId == userId)
+                .AsEnumerable());
         }
     }
 }

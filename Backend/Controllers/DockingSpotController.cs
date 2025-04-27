@@ -33,7 +33,7 @@ public class DockingSpotController : ControllerBase
         List<string>? servicesList = null;
         if (!string.IsNullOrEmpty(services))
             servicesList = services.Split(",").ToList();
-        var docks = await _dockService.GetAvailableDocksAsync(location, date, price, servicesList, availability);
+        var docks = await _dockService.GetAvailableDockingSpotsAsync(location, date, price, servicesList, availability);
         return Ok(docks.Select(ds => DockingSpotReturnDto.FromModel(ds)).ToList());
     }
 
@@ -42,7 +42,7 @@ public class DockingSpotController : ControllerBase
     {
         try
         {
-            _dockService.CreateDock(ds);
+            _dockService.CreateDockingSpot(ds);
             return Created();
         }
         catch (ModelInvalidException ex)
@@ -56,7 +56,7 @@ public class DockingSpotController : ControllerBase
     {
         try
         {
-            _dockService.UpdateDock(ds);
+            _dockService.UpdateDockingSpot(ds);
             return Ok();
         }
         catch (ModelInvalidException ex)
@@ -70,7 +70,7 @@ public class DockingSpotController : ControllerBase
     {
         try
         {
-            _dockService.DeleteDock(id);
+            _dockService.DeleteDockingSpot(id);
             return Ok();
         }
         catch (ModelInvalidException ex)
@@ -82,7 +82,7 @@ public class DockingSpotController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult GetDockingSpot([FromRoute] int id)
     {
-        var ds = _dockService.GetDockById(id);
+        var ds = _dockService.GetDockingSpotById(id);
         if (ds == null)
             return NotFound();
         return Ok(DockingSpotReturnDto.FromModel(ds));

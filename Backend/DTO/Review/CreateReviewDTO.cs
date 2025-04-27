@@ -1,3 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Backend.DTO.Review;
 
-public record CreateReviewDTO(int UserId, int DockId, int Rating, string Content);
+public record CreateReviewDTO(
+    [Required] int UserId, 
+    [Required] int DockId, 
+    [Required] int Rating, 
+    [Required] string Content
+);
