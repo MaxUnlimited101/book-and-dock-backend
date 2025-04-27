@@ -43,8 +43,8 @@ public class Program
         builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
         builder.Services.AddScoped<IPortRepository, PortRepository>();
         builder.Services.AddScoped<IGuideRepository, GuideRepository>();
+        builder.Services.AddScoped<ILocationRepository, LocationRepository>();
         // builder.Services.AddScoped<IImageRepository, ImageRepository>();
-        // builder.Services.AddScoped<ILocationRepository, LocationRepository>();
         // builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
         // builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
         // builder.Services.AddScoped<IRoleRepository, RoleRepository>();
@@ -58,9 +58,9 @@ public class Program
         builder.Services.AddScoped<IBookingService, BookingService>();
         builder.Services.AddScoped<IReviewService, ReviewService>();
         builder.Services.AddScoped<IGuideService, GuideService>();
+        builder.Services.AddScoped<ILocationService, LocationService>();
         // builder.Services.AddScoped<IPortService, PortService>();
         // builder.Services.AddScoped<IImageService, ImageService>();
-        // builder.Services.AddScoped<ILocationService, LocationService>();
         // builder.Services.AddScoped<INotificationService, NotificationService>();
         // builder.Services.AddScoped<IPaymentMethodService, PaymentMethodService>();
         // builder.Services.AddScoped<IRoleService, RoleService>();

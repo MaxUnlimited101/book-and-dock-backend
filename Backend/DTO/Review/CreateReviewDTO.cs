@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Backend.DTO.Review;
+namespace Backend.DTO;
 
 public record CreateReviewDTO(
     [Required] int UserId, 
