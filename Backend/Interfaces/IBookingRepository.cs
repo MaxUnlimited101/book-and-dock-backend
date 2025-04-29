@@ -10,4 +10,5 @@ public interface IBookingRepository
     public List<Booking> GetAll();
     public void Update(Booking booking);
     public bool CheckIfExistsById(int id);
+    public List<Booking> GetBookingsByDockOwnerId(int ownerId);
 }
