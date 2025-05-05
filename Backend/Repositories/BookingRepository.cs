@@ -1,6 +1,7 @@
 using Backend.Data;
 using Backend.Interfaces;
 using Backend.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories;
 
@@ -43,5 +44,15 @@ public class BookingRepository : IBookingRepository
     {
         _context.Bookings.Update(booking);
         _context.SaveChanges();
+    }
+    public List<Booking> GetBookingsByDockOwnerId(int ownerId)
+    {
+        return _context.Bookings
+            .Include(b => b.DockingSpot)
+                .ThenInclude(ds => ds.Port)
+            .Include(b => b.Sailor)
+            .Include(b => b.PaymentMethod)
+            .Where(b => b.DockingSpot.Port.OwnerId == ownerId)
+            .ToList();
     }
 }

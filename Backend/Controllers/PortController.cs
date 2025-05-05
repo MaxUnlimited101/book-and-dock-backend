@@ -1,80 +1,63 @@
+using Backend.DTO.Port;
+using Backend.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Backend.Services;
+using System.Security.Claims;
 
 namespace Backend.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [Authorize]
     public class PortController : ControllerBase
     {
-        // private readonly IPortService _portService;
+        private readonly IPortService _portService;
+        private readonly IPortRepository _portRepository;
+        private readonly IBookingRepository _bookingRepository;
 
-        // public PortController(IPortService portService)
-        // {
-        //     _portService = portService;
-        // }
+        public PortController(IPortService portService, IPortRepository portRepository, IBookingRepository bookingRepository)
+        {
+            _portService = portService;
+            _portRepository = portRepository;
+            _bookingRepository = bookingRepository;
+        }
 
-        // [HttpGet]
-        // public async Task<ActionResult<IEnumerable<PortDto>>> GetAllPorts()
-        // {
-        //     var ports = await _portService.GetAllPortsAsync();
-        //     return Ok(ports);
-        // }
+        [HttpPost]
+        public IActionResult CreatePort([FromBody] PortDto portDto)
+        {
+            var newPortId = _portService.Create(portDto);
+            return CreatedAtAction(nameof(GetPortById), new { portId = newPortId }, new { id = newPortId });
+        }
 
-        // [HttpGet("{id}")]
-        // public async Task<ActionResult<PortDto>> GetPortById(int id)
-        // {
-        //     var port = await _portService.GetPortByIdAsync(id);
-        //     if (port == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //     return Ok(port);
-        // }
+        [HttpPut("{portId}")]
+        public IActionResult UpdatePort(int portId, [FromBody] PortDto portDto)
+        {
+            var existingPort = _portRepository.GetById(portId);
+            if (existingPort == null) return NotFound();
 
-        // [HttpPost]
-        // public async Task<ActionResult> CreatePort([FromBody] PortDto portDto)
-        // {
-        //     if (!ModelState.IsValid)
-        //     {
-        //         return BadRequest(ModelState);
-        //     }
+            existingPort.Name = portDto.Name;
+            existingPort.Description = portDto.Description;
+            existingPort.IsApproved = portDto.IsApproved;
 
-        //     await _portService.CreatePortAsync(portDto);
-        //     return CreatedAtAction(nameof(GetPortById), new { id = portDto.Id }, portDto);
-        // }
+            _portRepository.Update(existingPort);
+            return Ok(new { message = "Port updated." });
+        }
 
-        // [HttpPut("{id}")]
-        // public async Task<ActionResult> UpdatePort(int id, [FromBody] PortDto portDto)
-        // {
-        //     if (!ModelState.IsValid)
-        //     {
-        //         return BadRequest(ModelState);
-        //     }
+        [HttpGet("/dock-owner/bookings")]
+        public IActionResult GetDockOwnerBookings()
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
+            if (userId == 0) return Unauthorized();
 
-        //     var updated = await _portService.UpdatePortAsync(id, portDto);
-        //     if (!updated)
-        //     {
-        //         return NotFound();
-        //     }
+            var bookings = _bookingRepository.GetBookingsByDockOwnerId(userId);
+            return Ok(bookings);
+        }
 
-        //     return NoContent();
-        // }
-
-        // [HttpDelete("{id}")]
-        // public async Task<ActionResult> DeletePort(int id)
-        // {
-        //     var deleted = await _portService.DeletePortAsync(id);
-        //     if (!deleted)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     return NoContent();
-        // }
+        [HttpGet("{portId}")]
+        public IActionResult GetPortById(int portId)
+        {
+            var port = _portRepository.GetById(portId);
+            return port != null ? Ok(port) : NotFound();
+        }
     }
 }

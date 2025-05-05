@@ -1,14 +1,14 @@
 using Backend.Models;
-using System.Collections.Generic;
 
-namespace Backend.Interfaces;
-
-public interface IPortRepository
+namespace Backend.Interfaces
 {
-    public IEnumerable<Port> GetAllPorts();
-    public Port? GetPortById(int id);
-    public Port? GetPortByName(string name);
-    public int CreatePort(Port port);
-    public void UpdatePort(Port port);
-    public void DeletePort(int id);
+    public interface IPortRepository
+    {
+        public int Create(Port port);
+        public void Delete(int id);
+        public Port? GetById(int id);
+        public List<Port> GetAll();
+        public void Update(Port port);
+        public bool CheckIfExistsById(int id);
+    }
 }

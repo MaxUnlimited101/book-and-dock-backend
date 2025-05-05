@@ -1,4 +1,5 @@
 using Backend.Models;
+using PortModel = Backend.Models.Port;
 
 namespace Backend.DTO;
 
@@ -14,7 +15,7 @@ public record DockingSpotReturnDto(
     DateTime? CreatedOn,
     ICollection<Location> Locations,
     User Owner,
-    Port Port,
+    PortModel Port,
     ICollection<Service> Services
 )
 {
