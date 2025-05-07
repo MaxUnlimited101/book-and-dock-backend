@@ -7,7 +7,7 @@ using System.Security.Claims;
 namespace Backend.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [Authorize]
     public class PortController : ControllerBase
     {
@@ -43,7 +43,7 @@ namespace Backend.Controllers
             return Ok(new { message = "Port updated." });
         }
 
-        [HttpGet("/dock-owner/bookings")]
+        [HttpGet("dock-owner/bookings")]
         public IActionResult GetDockOwnerBookings()
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");

@@ -52,7 +52,7 @@ public class DockingSpotService : IDockingSpotService
         dockingSpot.OwnerId = ds.OwnerId;
         dockingSpot.Owner = owner;
 
-        var port = _portRepository.GetPortById(ds.PortId);
+        var port = _portRepository.GetById(ds.PortId);
         if (port == null)
         {
             throw new ModelInvalidException("Port not found");
@@ -85,7 +85,7 @@ public class DockingSpotService : IDockingSpotService
         dockingSpot.OwnerId = ds.OwnerId;
         dockingSpot.Owner = owner;
 
-        var port = _portRepository.GetPortById(ds.PortId);
+        var port = _portRepository.GetById(ds.PortId);
         if (port == null)
         {
             throw new ModelInvalidException("Port not found");

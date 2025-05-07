@@ -1,10 +1,11 @@
 using Backend.Data;
+using Backend.Interfaces;
 using Backend.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories
 {
-    public class PortRepository
+    public class PortRepository : IPortRepository
     {
         private readonly BookAndDockContext _context;
 
