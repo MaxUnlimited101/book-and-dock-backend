@@ -25,7 +25,7 @@ namespace Backend.Controllers
         public async Task<ActionResult<IEnumerable<ServiceDto>>> GetAll()
         {
             var services = await _serviceService.GetAllServicesAsync();
-            return Ok(services);
+            return Ok(services.Select(s => ServiceDto.FromModel(s)));
         }
 
         [HttpGet("{id}")]
@@ -36,7 +36,7 @@ namespace Backend.Controllers
             {
                 return NotFound();
             }
-            return Ok(service);
+            return Ok(ServiceDto.FromModel(service));
         }
 
         [HttpPost]
@@ -50,7 +50,7 @@ namespace Backend.Controllers
             try
             {
                 var id = await _serviceService.CreateServiceAsync(serviceDto);
-                return CreatedAtAction(nameof(Create), new { id = id });
+                return CreatedAtAction(nameof(GetById), new { id = id });
             }
             catch (ModelInvalidException ex)
             {

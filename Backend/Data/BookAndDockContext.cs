@@ -34,7 +34,7 @@ public partial class BookAndDockContext : DbContext
 
     public virtual DbSet<Role> Roles { get; set; }
 
-    public virtual DbSet<Service?> Services { get; set; }
+    public virtual DbSet<Service> Services { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 

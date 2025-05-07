@@ -14,7 +14,7 @@ public class ServiceRepository : IServiceRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Service?>> GetAllServicesAsync()
+    public async Task<IEnumerable<Service>> GetAllServicesAsync()
     {
         return await _context.Services.ToListAsync();
     }

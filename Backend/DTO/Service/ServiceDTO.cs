@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Backend.Models;
 
 namespace Backend.DTO;
 
@@ -21,4 +22,18 @@ public record ServiceDto(
 )
 {
     public ServiceDto WithId(int id) => this with { Id = id };
+
+    public static ServiceDto FromModel(Service service)
+    {
+        return new ServiceDto(
+            service.Id,
+            service.Name,
+            service.Description,
+            service.Price,
+            service.PortId,
+            service.DockingSpotId,
+            service.IsAvailable,
+            service.CreatedOn
+        );
+    }
 }

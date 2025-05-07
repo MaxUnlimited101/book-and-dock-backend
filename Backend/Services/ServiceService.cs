@@ -65,7 +65,7 @@ public class ServiceService : IServiceService
         await _serviceRepository.DeleteServiceAsync(id);
     }
 
-    public async Task<IEnumerable<Service?>> GetAllServicesAsync()
+    public async Task<IEnumerable<Service>> GetAllServicesAsync()
     {
         return await _serviceRepository.GetAllServicesAsync();
     }
