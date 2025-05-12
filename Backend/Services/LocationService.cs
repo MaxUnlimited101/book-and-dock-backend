@@ -29,7 +29,7 @@ public class LocationService : ILocationService
         DockingSpot? dockingSpot = null;
         if (location.PortId != null)
         {
-            port = _portRepository.GetPortById(location.PortId.Value);
+            port = _portRepository.GetById(location.PortId.Value);
             if (port == null)
             {
                 throw new ModelInvalidException($"Port with ID {location.PortId} not found.");
@@ -96,7 +96,7 @@ public class LocationService : ILocationService
         DockingSpot? dockingSpot = null;
         if (location.PortId != null)
         {
-            port = _portRepository.GetPortById(location.PortId.Value);
+            port = _portRepository.GetById(location.PortId.Value);
             if (port == null)
             {
                 throw new ModelInvalidException($"Port with ID {location.PortId} not found.");
