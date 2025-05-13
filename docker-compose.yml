@@ -15,6 +15,7 @@ services:
       - db-network
     volumes:
         - shared_data:/appdata
+        - ./Backend/db_backup.sql:/appdata/db_backup.sql
   postgres:
     image: postgres:17
     container_name: postgres_db
