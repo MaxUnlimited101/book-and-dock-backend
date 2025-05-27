@@ -68,55 +68,82 @@ public class Program
             });
         });
 
+        // bool is_docker = Environment.GetEnvironmentVariable("IS_DOCKER_CONTAINER") == "TRUE";
 
-        bool is_docker = Environment.GetEnvironmentVariable("IS_DOCKER_CONTAINER") == "TRUE";
+        // if (is_docker)
+        // {
+        //     // Restore the database from the backup
+        //     string backupFilePath = "/appdata/db_backup.sql";
+        //     if (!File.Exists(backupFilePath))
+        //     {
+        //         Console.WriteLine("Database backup file not found. Skipping restoring database...");
+        //     }
 
-        if (is_docker)
+        //     // Ensure database exists
+        //     // create if not exists
+        //     string connectionString = Environment.GetEnvironmentVariable("POSTGRES__DEFAULT_DB_CONNECTION_STRING")
+        //          ?? throw new Exception("POSTGRES_CONNECTION_STRING not set");
+        //     using (var connection = new NpgsqlConnection(connectionString))
+        //     {
+        //         connection.Open();
+        //         using (var command = new NpgsqlCommand($"CREATE DATABASE \"{Environment.GetEnvironmentVariable("POSTGRES_DB")}\"", connection))
+        //         {
+        //             try
+        //             {
+        //                 command.ExecuteNonQuery();
+        //                 Console.WriteLine("Database created successfully.");
+        //             }
+        //             catch (NpgsqlException ex)
+        //             {
+        //                 System.Console.WriteLine($"Error creating database: {ex.Message}, skipping...");
+        //             }
+        //         }
+        //     }
+
+        //     // Connect to PostgreSQL database in Docker container
+        //     builder.Services.AddNpgsql<BookAndDockContext>(
+        //         Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING"));
+        //     builder.Services.AddDbContext<BookAndDockContext>(options =>
+        //         options.UseNpgsql(Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING"))
+        //     );
+        // }
+        // else
+        // {
+        //     Console.WriteLine("Running in local environment");
+        //     // Connect to local PostgreSQL database
+        //     builder.Services.AddNpgsql<BookAndDockContext>(builder.Configuration.GetConnectionString("postgres"));
+        //     builder.Services.AddDbContext<BookAndDockContext>(options =>
+        //         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+        //     );
+        // }
+
+        // Ensure database exists
+        // create if not exists
+        string connectionString = Environment.GetEnvironmentVariable("POSTGRES__DEFAULT_DB_CONNECTION_STRING")
+             ?? throw new Exception("POSTGRES_CONNECTION_STRING not set");
+
+        using (var connection = new NpgsqlConnection(connectionString))
         {
-            // Restore the database from the backup
-            string backupFilePath = "/appdata/db_backup.sql";
-            if (!File.Exists(backupFilePath))
+            connection.Open();
+            using (var command = new NpgsqlCommand($"CREATE DATABASE \"{Environment.GetEnvironmentVariable("POSTGRES_DB")}\"", connection))
             {
-                Console.WriteLine("Database backup file not found. Skipping restoring database...");
-            }
-
-            // Ensure database exists
-            // create if not exists
-            string connectionString = Environment.GetEnvironmentVariable("POSTGRES__DEFAULT_DB_CONNECTION_STRING")
-                 ?? throw new Exception("POSTGRES_CONNECTION_STRING not set");
-            using (var connection = new NpgsqlConnection(connectionString))
-            {
-                connection.Open();
-                using (var command = new NpgsqlCommand($"CREATE DATABASE \"{Environment.GetEnvironmentVariable("POSTGRES_DB")}\"", connection))
+                try
                 {
-                    try
-                    {
-                        command.ExecuteNonQuery();
-                        Console.WriteLine("Database created successfully.");
-                    }
-                    catch (NpgsqlException ex)
-                    {
-                        System.Console.WriteLine($"Error creating database: {ex.Message}, skipping...");
-                    }
+                    command.ExecuteNonQuery();
+                    Console.WriteLine("Database created successfully.");
+                }
+                catch (NpgsqlException ex)
+                {
+                    System.Console.WriteLine($"Error creating database: {ex.Message}, skipping...");
                 }
             }
-            
-            // Connect to PostgreSQL database in Docker container
-            builder.Services.AddNpgsql<BookAndDockContext>(
-                Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING"));
-            builder.Services.AddDbContext<BookAndDockContext>(options =>
-                options.UseNpgsql(Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING"))
-            );
         }
-        else
-        {
-            Console.WriteLine("Running in local environment");
-            // Connect to local PostgreSQL database
-            builder.Services.AddNpgsql<BookAndDockContext>(builder.Configuration.GetConnectionString("postgres"));
-            builder.Services.AddDbContext<BookAndDockContext>(options =>
-                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
-            );
-        }
+
+        builder.Services.AddNpgsql<BookAndDockContext>(
+            Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING"));
+        builder.Services.AddDbContext<BookAndDockContext>(options =>
+            options.UseNpgsql(Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING"))
+        );
 
         // Add context
         //builder.Services.AddNpgsql<BookAndDockContext>(builder.Configuration.GetConnectionString("postgres"));
