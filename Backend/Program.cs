@@ -195,7 +195,7 @@ public class Program
         app.UseSwagger();
         app.UseSwaggerUI();
 
-        app.UseCors();
+        // app.UseCors();
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
