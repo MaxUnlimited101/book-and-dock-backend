@@ -47,3 +47,7 @@ jobs:
           # Corrected parameter name for build arguments
           # Add actual build arguments if needed (e.g., "ENV_VAR_NAME=value")
           buildArguments: "" # No build arguments specified, keep empty if not needed
+          environmentVariables: |
+            POSTGRES_CONNECTION_STRING=${{ secrets.POSTGRES_CONNECTION_STRING }}
+            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            POSTGRES__DEFAULT_DB_CONNECTION_STRING=${{ secrets.POSTGRES__DEFAULT_DB_CONNECTION_STRING }}
