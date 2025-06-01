@@ -1,0 +1,45 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT}:8080"
+    environment:
+      - PORT=${PORT}
+    platform: linux/amd64
+    depends_on:
+      postgres:
+        condition: service_healthy
+        restart: true
+    networks:
+      - db-network
+    volumes:
+        - shared_data:/appdata
+        - ./Backend/db_backup.sql:/appdata/db_backup.sql
+  postgres:
+    image: postgres:17
+    container_name: postgres_db
+    platform: linux/amd64
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - shared_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 4
+    networks:
+      - db-network
+
+volumes:
+  shared_data:
+
+networks:
+  db-network:
+    driver: bridge

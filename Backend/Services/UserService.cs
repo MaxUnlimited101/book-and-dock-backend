@@ -46,4 +46,9 @@ public class UserService : IUserService
     {
         return _userRepository.DeleteUserAsync(id);
     }
+
+    public Dictionary<string, int> CountUsersByRoles()
+    {
+        return _userRepository.CountUsersByRoles();
+    }
 }

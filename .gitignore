@@ -58,6 +58,11 @@ nunit-*.xml
 # Visual Studio temporary files
 .vs/
 
-.env
+<<<<<<< HEAD
+# User specific files
 .DS_Store
-db_backup.sql
+
+=======
+.DS_Store
+>>>>>>> feature/dock-owners-api
+.env

@@ -1,11 +1,16 @@
+using Backend.DTO;
 using Backend.Models;
 
 namespace Backend.Interfaces;
 
 public interface IDockingSpotService
 {
-    Task<List<DockingSpot>> GetAvailableDocksAsync(string? location, DateTime? date, decimal? price, 
+    Task<List<DockingSpot>> GetAvailableDockingSpotsAsync(string? location, DateTime? date, decimal? price, 
         List<string>? services, string? availability);
     
-    public bool CheckIfDockExistsById(int id);
+    public bool CheckIfDockingSpotExistsById(int id);
+    public DockingSpot? GetDockingSpotById(int id);
+    public void CreateDockingSpot(DockingSpotDto ds);
+    public void UpdateDockingSpot(DockingSpotDto ds);
+    public void DeleteDockingSpot(int id);
 }

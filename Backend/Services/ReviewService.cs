@@ -1,4 +1,4 @@
-using Backend.DTO.Review;
+using Backend.DTO;
 using Backend.Interfaces;
 using Backend.Models;
 
@@ -83,5 +83,16 @@ namespace Backend.Services
             return _reviewRepository.DeleteReviewAsync(id);
         }
 
+        public async Task<IEnumerable<ReviewDTO>> GetDockingSpotReviews(int dockingSpotId)
+        {
+            var reviews = await _reviewRepository.GetDockingSpotReviewsAsync(dockingSpotId);
+            return reviews.Select(r => MapToDto(r));
+        }
+
+        public async Task<IEnumerable<ReviewDTO>> GetUserReviews(int userId)
+        {
+            var reviews = await _reviewRepository.GetUserReviewsAsync(userId);
+            return reviews.Select(r => MapToDto(r));
+        }
     }
 }

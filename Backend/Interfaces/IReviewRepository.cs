@@ -13,6 +13,8 @@ namespace Backend.Interfaces
         Task<Review?> GetReviewByIdAsync(int id);
         List<Review> GetAllReviews();
         Task<List<Review>> GetAllReviewsAsync();
+        Task<IEnumerable<Review>> GetDockingSpotReviewsAsync(int dockingSpotId);
+        Task<IEnumerable<Review>> GetUserReviewsAsync(int userId);
 
         // UPDATE
         bool UpdateReview(int id, Review updatedReview);

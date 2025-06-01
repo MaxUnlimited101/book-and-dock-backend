@@ -1,14 +1,17 @@
 using Backend.DTO;
-using Backend.DTO.Review;
+using Backend.Exceptions;
 using Backend.Interfaces;
 using Backend.Models;
 using Backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Differencing;
 
 namespace Backend.Controllers;
 
 [ApiController]
-[Route("dockingSpots")]
+[Route("api/[controller]")]
+[Authorize]
 public class DockingSpotController : ControllerBase
 {
     private readonly IDockingSpotService _dockService;
@@ -19,7 +22,7 @@ public class DockingSpotController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<DockingSpotReturnDto>>> GetAvailableDocks(
+    public async Task<ActionResult<IEnumerable<DockingSpotReturnDto>>> GetAvailableDockingSpots(
         [FromQuery] string? location,
         [FromQuery] DateTime? date,
         [FromQuery] decimal? price,
@@ -29,13 +32,58 @@ public class DockingSpotController : ControllerBase
         List<string>? servicesList = null;
         if (!string.IsNullOrEmpty(services))
             servicesList = services.Split(",").ToList();
-        var docks = await _dockService.GetAvailableDocksAsync(location, date, price, servicesList, availability);
+        var docks = await _dockService.GetAvailableDockingSpotsAsync(location, date, price, servicesList, availability);
         return Ok(docks.Select(ds => DockingSpotReturnDto.FromModel(ds)).ToList());
     }
 
-    [HttpPost("{id}/reviews")]
-    public async Task<ActionResult<StatusReturnDto>> CreateReview([FromRoute] int id, [FromBody] CreateReviewDTO reviewDto)
+    [HttpPost]
+    public IActionResult CreateDockingSpot([FromBody] DockingSpotDto ds)
     {
-        throw new NotImplementedException();
+        try
+        {
+            _dockService.CreateDockingSpot(ds);
+            return Created();
+        }
+        catch (ModelInvalidException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPut]
+    public IActionResult UpdateDockingSpot([FromBody] DockingSpotDto ds)
+    {
+        try
+        {
+            _dockService.UpdateDockingSpot(ds);
+            return Ok();
+        }
+        catch (ModelInvalidException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult DeleteDockingSpot([FromRoute] int id)
+    {
+        try
+        {
+            _dockService.DeleteDockingSpot(id);
+            return Ok();
+        }
+        catch (ModelInvalidException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("{id}")]
+    public IActionResult GetDockingSpot([FromRoute] int id)
+    {
+        var ds = _dockService.GetDockingSpotById(id);
+        if (ds == null)
+            return NotFound();
+        return Ok(DockingSpotReturnDto.FromModel(ds));
     }
 }

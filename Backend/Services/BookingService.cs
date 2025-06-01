@@ -27,7 +27,7 @@ public class BookingService : IBookingService
             throw new ModelNotFoundException("Invalid user");
         }
 
-        if (!_dockService.CheckIfDockExistsById(booking.DockingSpotId))
+        if (!_dockService.CheckIfDockingSpotExistsById(booking.DockingSpotId))
         {
             throw new ModelNotFoundException("Invalid dock");
         }

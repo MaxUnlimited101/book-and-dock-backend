@@ -1,4 +1,4 @@
-using Backend.DTO.Review;
+using Backend.DTO;
 using Backend.Models;
 
 namespace Backend.Interfaces
@@ -20,5 +20,11 @@ namespace Backend.Interfaces
 
         // Deletes a review by its id.
         Task DeleteReviewAsync(int id);
+
+        // Retrieves all reviews for a specific DockingSpot by its id as a list of DTOs.
+        Task<IEnumerable<ReviewDTO>> GetDockingSpotReviews(int dockingSpotId);
+        
+        // Retrieves all reviews for a specific User by its id as a list of DTOs.
+        Task<IEnumerable<ReviewDTO>> GetUserReviews(int userId);
     }
 }
