@@ -30,7 +30,8 @@ WORKDIR /app
 # Copy the published application from the build stage
 COPY --from=build /app/publish .
 # Copy .env file to the app directory
-COPY .env /app
+# not committed to git, so it will not be copied by default
+#COPY .env /app
 
 # Expose the port the application runs on
 EXPOSE ${PORT}
