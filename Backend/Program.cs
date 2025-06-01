@@ -92,12 +92,11 @@ public class Program
 
         builder.Services.AddNpgsql<BookAndDockContext>(
             Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING"));
+
+        // Add context
         builder.Services.AddDbContext<BookAndDockContext>(options =>
             options.UseNpgsql(Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING"))
         );
-
-        // Add context
-        //builder.Services.AddNpgsql<BookAndDockContext>(builder.Configuration.GetConnectionString("postgres"));
 
         // Add repositories
         builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -109,11 +108,11 @@ public class Program
         builder.Services.AddScoped<IPortRepository, PortRepository>();
         builder.Services.AddScoped<IGuideRepository, GuideRepository>();
         builder.Services.AddScoped<ILocationRepository, LocationRepository>();
+        builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+        builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+        builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
+        builder.Services.AddScoped<IRoleRepository, RoleRepository>();
         // builder.Services.AddScoped<IImageRepository, ImageRepository>();
-        // builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
-        // builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
-        // builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-        // builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 
         // Add services
         builder.Services.AddScoped<IUserService, UserService>();
@@ -124,12 +123,12 @@ public class Program
         builder.Services.AddScoped<IReviewService, ReviewService>();
         builder.Services.AddScoped<IGuideService, GuideService>();
         builder.Services.AddScoped<ILocationService, LocationService>();
-        // builder.Services.AddScoped<IPortService, PortService>();
+        builder.Services.AddScoped<IPortService, PortService>();
+        builder.Services.AddScoped<INotificationService, NotificationService>();
+        builder.Services.AddScoped<IServiceService, ServiceService>();
+        builder.Services.AddScoped<IPaymentMethodService, PaymentMethodService>();
+        builder.Services.AddScoped<IRoleService, RoleService>();
         // builder.Services.AddScoped<IImageService, ImageService>();
-        // builder.Services.AddScoped<INotificationService, NotificationService>();
-        // builder.Services.AddScoped<IPaymentMethodService, PaymentMethodService>();
-        // builder.Services.AddScoped<IRoleService, RoleService>();
-        // builder.Services.AddScoped<IServiceService, ServiceService>();
 
         // Configure Npgsql to map DateTime to timestamp with time zone
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
