@@ -1,0 +1,15 @@
+#!/bin/bash
+
+docker-compose build --no-cache
+if [ $? -ne 0 ]; then
+    echo "Build failed. Exiting."
+    exit 1
+fi
+
+docker tag book-and-dock-backend-app maxcool101/book-and-dock-backend-app:amd64
+
+docker push maxcool101/book-and-dock-backend-app:amd64
+if [ $? -ne 0 ]; then
+    echo "Push failed. Exiting."
+    exit 1
+fi

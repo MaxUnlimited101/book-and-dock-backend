@@ -4,7 +4,7 @@ using Backend.Models;
 
 namespace Backend.Services
 {
-    public class PortService
+    public class PortService : IPortService
     {
         private readonly IPortRepository _portRepository;
 

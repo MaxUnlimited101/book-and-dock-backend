@@ -3,6 +3,8 @@ using Backend.Interfaces;
 using Backend.Models;
 using Microsoft.EntityFrameworkCore;
 
+namespace Backend.Repositories;
+
 public class UserRepository : IUserRepository
 {
     private readonly BookAndDockContext _bookAndDockContext;
@@ -127,6 +129,8 @@ public class UserRepository : IUserRepository
         {
             roleCount[role.Name] = role.Users.Count;
         }
+        
+        
         return roleCount;
     }
 

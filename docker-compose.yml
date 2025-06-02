@@ -7,6 +7,7 @@ services:
       - "${PORT}:8080"
     environment:
       - PORT=${PORT}
+    platform: linux/amd64
     depends_on:
       postgres:
         condition: service_healthy
@@ -15,9 +16,11 @@ services:
       - db-network
     volumes:
         - shared_data:/appdata
+        - ./Backend/db_backup.sql:/appdata/db_backup.sql
   postgres:
     image: postgres:17
     container_name: postgres_db
+    platform: linux/amd64
     ports:
       - "5432:5432"
     environment:

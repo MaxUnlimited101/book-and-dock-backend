@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Npgsql;
 
 namespace Backend;
 
@@ -27,7 +28,8 @@ public class Program
         // Add controllers
         builder.Services.AddControllers().AddJsonOptions(options =>
         {
-            options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+            options.JsonSerializerOptions.ReferenceHandler =
+                System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
         });
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -51,50 +53,51 @@ public class Program
             });
 
             options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-    {
-        {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
             {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
                 {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                    Id = "Bearer"
+                    new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                    {
+                        Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                        {
+                            Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
                 }
-            },
-            Array.Empty<string>()
-        }
-    });
+            });
         });
 
+        // Ensure database exists
+        // create if not exists
+        string connectionString = Environment.GetEnvironmentVariable("POSTGRES__DEFAULT_DB_CONNECTION_STRING")
+             ?? throw new Exception("POSTGRES_CONNECTION_STRING not set");
 
-        bool is_docker = Environment.GetEnvironmentVariable("IS_DOCKER_CONTAINER") == "TRUE";
-
-        if (is_docker)
+        using (var connection = new NpgsqlConnection(connectionString))
         {
-            Console.WriteLine("Running in Docker container");
-            for (int i = 0; i < 10; i++)
+            connection.Open();
+            using (var command = new NpgsqlCommand($"CREATE DATABASE \"{Environment.GetEnvironmentVariable("POSTGRES_DB")}\"", connection))
             {
-                Console.WriteLine("------NOT WORKNING WITOUT MIGRATIONS------");
+                try
+                {
+                    command.ExecuteNonQuery();
+                    Console.WriteLine("Database created successfully.");
+                }
+                catch (NpgsqlException ex)
+                {
+                    System.Console.WriteLine($"Error creating database: {ex.Message}, skipping...");
+                }
             }
-            // Connect to PostgreSQL database in Docker container
-            builder.Services.AddNpgsql<BookAndDockContext>(Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING"));
-            builder.Services.AddDbContext<BookAndDockContext>(options =>
-                options.UseNpgsql(Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING"))
-            );
         }
-        else
-        {
-            Console.WriteLine("Running in local environment");
-            // Connect to local PostgreSQL database
-            builder.Services.AddNpgsql<BookAndDockContext>(builder.Configuration.GetConnectionString("postgres"));
-            builder.Services.AddDbContext<BookAndDockContext>(options =>
-                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
-            );
-        }
+
+        builder.Services.AddNpgsql<BookAndDockContext>(
+            Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING"));
 
         // Add context
-        //builder.Services.AddNpgsql<BookAndDockContext>(builder.Configuration.GetConnectionString("postgres"));
-        
+        builder.Services.AddDbContext<BookAndDockContext>(options =>
+            options.UseNpgsql(Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING"))
+        );
+
         // Add repositories
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IDockingSpotRepository, DockingSpotRepository>();
@@ -105,12 +108,12 @@ public class Program
         builder.Services.AddScoped<IPortRepository, PortRepository>();
         builder.Services.AddScoped<IGuideRepository, GuideRepository>();
         builder.Services.AddScoped<ILocationRepository, LocationRepository>();
+        builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+        builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+        builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
+        builder.Services.AddScoped<IRoleRepository, RoleRepository>();
         // builder.Services.AddScoped<IImageRepository, ImageRepository>();
-        // builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
-        // builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
-        // builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-        // builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
-        
+
         // Add services
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IDockingSpotService, DockingSpotService>();
@@ -120,20 +123,20 @@ public class Program
         builder.Services.AddScoped<IReviewService, ReviewService>();
         builder.Services.AddScoped<IGuideService, GuideService>();
         builder.Services.AddScoped<ILocationService, LocationService>();
-        // builder.Services.AddScoped<IPortService, PortService>();
+        builder.Services.AddScoped<IPortService, PortService>();
+        builder.Services.AddScoped<INotificationService, NotificationService>();
+        builder.Services.AddScoped<IServiceService, ServiceService>();
+        builder.Services.AddScoped<IPaymentMethodService, PaymentMethodService>();
+        builder.Services.AddScoped<IRoleService, RoleService>();
         // builder.Services.AddScoped<IImageService, ImageService>();
-        // builder.Services.AddScoped<INotificationService, NotificationService>();
-        // builder.Services.AddScoped<IPaymentMethodService, PaymentMethodService>();
-        // builder.Services.AddScoped<IRoleService, RoleService>();
-        // builder.Services.AddScoped<IServiceService, ServiceService>();
-        
+
         // Configure Npgsql to map DateTime to timestamp with time zone
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-        
+
         // builder.Services.AddDbContext<BookAndDockContext>(options =>
         //     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
         // );
-        
+
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -168,16 +171,16 @@ public class Program
             });
 
 
-        builder.Services.AddCors(options =>
-        {
-            options.AddDefaultPolicy(policy =>
-            {
-                policy.WithOrigins("http://localhost:5173", "http://localhost:8080")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials(); 
-            });
-        });
+        // builder.Services.AddCors(options =>
+        // {
+        //     options.AddDefaultPolicy(policy =>
+        //     {
+        //         policy.WithOrigins("http://localhost:5173", "http://localhost:8080")
+        //             .AllowAnyHeader()
+        //             .AllowAnyMethod()
+        //             .AllowCredentials();
+        //     });
+        // });
 
 
         var app = builder.Build();
@@ -191,11 +194,11 @@ public class Program
         app.UseSwagger();
         app.UseSwaggerUI();
 
-        app.UseCors();
+        // app.UseCors();
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
-        
+
         app.MapControllers();
 
         app.Run();
