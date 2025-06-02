@@ -131,7 +131,7 @@ public class Program
         // builder.Services.AddScoped<IImageService, ImageService>();
 
         // Configure Npgsql to map DateTime to timestamp with time zone
-        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+        // AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
         // builder.Services.AddDbContext<BookAndDockContext>(options =>
         //     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
@@ -171,16 +171,16 @@ public class Program
             });
 
 
-        // builder.Services.AddCors(options =>
-        // {
-        //     options.AddDefaultPolicy(policy =>
-        //     {
-        //         policy.WithOrigins("http://localhost:5173", "http://localhost:8080")
-        //             .AllowAnyHeader()
-        //             .AllowAnyMethod()
-        //             .AllowCredentials();
-        //     });
-        // });
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                    // .AllowCredentials();
+            });
+        });
 
 
         var app = builder.Build();
@@ -194,7 +194,7 @@ public class Program
         app.UseSwagger();
         app.UseSwaggerUI();
 
-        // app.UseCors();
+        app.UseCors();
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();

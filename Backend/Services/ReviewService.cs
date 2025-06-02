@@ -21,8 +21,7 @@ namespace Backend.Services
                 review.DockId,
                 review.Rating,       // Correctly added the Rating parameter 
                 review.Content,
-                review.CreatedAt,
-                review.UpdatedAt
+                review.CreatedAt
             );
         }
         public async Task<ReviewDTO> CreateReviewAsync(CreateReviewDTO reviewDto)
@@ -35,7 +34,6 @@ namespace Backend.Services
                 Rating = reviewDto.Rating,
                 Content = reviewDto.Content,
                 CreatedAt = DateTime.UtcNow,
-                UpdatedAt = null
             };
 
             // Create review in repository.

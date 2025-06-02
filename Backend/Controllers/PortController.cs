@@ -1,4 +1,4 @@
-using Backend.DTO.Port;
+using Backend.DTO;
 using Backend.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -57,7 +57,26 @@ namespace Backend.Controllers
         public IActionResult GetPortById(int portId)
         {
             var port = _portRepository.GetById(portId);
-            return port != null ? Ok(port) : NotFound();
+            return port != null ? Ok(port.ToDto()) : NotFound();
+        }
+
+        [HttpDelete("{portId}")]
+        public IActionResult DeletePort(int portId)
+        {
+            if (!_portRepository.CheckIfExistsById(portId))
+            {
+                return NotFound(new { message = $"Port with ID {portId} not found." });
+            }
+
+            _portService.Delete(portId);
+            return NoContent();
+        }
+
+        [HttpGet]
+        public IActionResult GetAllPorts()
+        {
+            var ports = _portRepository.GetAll();
+            return Ok(ports.Select(p => p.ToDto()));
         }
     }
 }

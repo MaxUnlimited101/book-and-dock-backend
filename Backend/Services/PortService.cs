@@ -1,4 +1,4 @@
-﻿using Backend.DTO.Port;
+﻿using Backend.DTO;
 using Backend.Interfaces;
 using Backend.Models;
 
@@ -24,7 +24,7 @@ namespace Backend.Services
                 Description = portDto.Description,
                 IsApproved = portDto.IsApproved,
                 CreatedOn = DateTime.UtcNow,
-                OwnerId = ownerId
+                OwnerId = ownerId,
             };
 
             return _portRepository.Create(port);
