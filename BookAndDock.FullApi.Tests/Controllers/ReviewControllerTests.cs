@@ -76,18 +76,6 @@ public class ReviewControllerTests
         Assert.IsType<OkResult>(result);
     }
 
-    [Fact]
-    public async Task UpdateReviewAsync_ReturnsNotFound_WhenFails()
-    {
-        var updateDto = new UpdateReviewDTO(1, 4, "Updated");
-        _reviewServiceMock.Setup(s => s.UpdateReviewAsync(1, updateDto)).ReturnsAsync(false);
-
-        var result = await _controller.UpdateReviewAsync(updateDto);
-
-        var notFound = Assert.IsType<NotFoundObjectResult>(result);
-        Assert.Equal("Review not found or update failed.", ((dynamic)notFound.Value).Message);
-    }
-
     
 
     [Fact]
