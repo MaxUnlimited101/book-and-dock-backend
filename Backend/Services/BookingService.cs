@@ -1,4 +1,5 @@
 using Backend.DTO;
+using Backend.DTO.Booking;
 using Backend.Exceptions;
 using Backend.Interfaces;
 using Backend.Models;
@@ -51,4 +52,26 @@ public class BookingService : IBookingService
             throw new ModelNotFoundException("Invalid booking id");
         }
     }
+
+    public List<Booking> GetAll() => _bookingRepository.GetAll();
+
+    public List<Booking> GetBookingsByUserId(int userId) =>
+        _bookingRepository.GetAll().Where(b => b.SailorId == userId).ToList();
+
+    public void Update(int id, UpdateBookingDto dto)
+    {
+        var booking = _bookingRepository.GetById(id)
+            ?? throw new ModelNotFoundException("Booking not found");
+
+        if (dto.EndDate <= dto.StartDate)
+            throw new InvalidDataException("End date cannot be before start date");
+
+        booking.StartDate = dto.StartDate;
+        booking.EndDate = dto.EndDate;
+        booking.People = dto.People;
+        booking.PaymentMethod = new PaymentMethod { Name = dto.PaymentMethod };
+
+        _bookingRepository.Update(booking);
+    }
+
 }

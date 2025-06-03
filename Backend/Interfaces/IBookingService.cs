@@ -1,5 +1,7 @@
 using Backend.DTO;
+using Backend.DTO.Booking;
 using Backend.Exceptions;
+using Backend.Models;
 
 namespace Backend.Interfaces;
 
@@ -20,4 +22,8 @@ public interface IBookingService
     /// <exception cref="ModelNotFoundException">The required model for
     /// creating the booking is not present in the DBContext</exception>
     void Delete(int id);
+
+    List<Booking> GetAll();
+    List<Booking> GetBookingsByUserId(int userId);
+    void Update(int id, UpdateBookingDto dto);
 }
