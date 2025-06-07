@@ -130,6 +130,12 @@ public class UserRepository : IUserRepository
             roleCount[role.Name] = role.Users.Count;
         }
         
+        // average rating
+        
+        roleCount["AverageRating"] = (int)_bookAndDockContext.Reviews.Average(r => r.Rating);
+        
+        // available docking spots
+        roleCount["AvailableDockingSpots"] = _bookAndDockContext.DockingSpots.Count(ds => ds.IsAvailable);
         
         return roleCount;
     }

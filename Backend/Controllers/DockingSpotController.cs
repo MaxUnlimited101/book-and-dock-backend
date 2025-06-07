@@ -10,7 +10,7 @@ using Microsoft.CodeAnalysis.Differencing;
 namespace Backend.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/ds")]
 [Authorize]
 public class DockingSpotController : ControllerBase
 {
@@ -50,12 +50,12 @@ public class DockingSpotController : ControllerBase
         }
     }
 
-    [HttpPut]
-    public IActionResult UpdateDockingSpot([FromBody] DockingSpotDto ds)
+    [HttpPut("{id}")]
+    public IActionResult UpdateDockingSpot(int id, [FromBody] DockingSpotDto ds)
     {
         try
         {
-            _dockService.UpdateDockingSpot(ds);
+            _dockService.UpdateDockingSpot(id, ds);
             return Ok();
         }
         catch (ModelInvalidException ex)

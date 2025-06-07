@@ -71,7 +71,7 @@ public class Program
         // Ensure database exists
         // create if not exists
         string connectionString = Environment.GetEnvironmentVariable("POSTGRES__DEFAULT_DB_CONNECTION_STRING")
-             ?? throw new Exception("POSTGRES_CONNECTION_STRING not set");
+             ?? throw new Exception("POSTGRES__DEFAULT_DB_CONNECTION_STRING not set");
 
         using (var connection = new NpgsqlConnection(connectionString))
         {

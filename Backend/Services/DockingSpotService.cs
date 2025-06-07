@@ -70,9 +70,9 @@ public class DockingSpotService : IDockingSpotService
         _dockingSpotRepository.CreateDockingSpot(dockingSpot);
     }
 
-    public void UpdateDockingSpot(DockingSpotDto ds)
+    public void UpdateDockingSpot(int id, DockingSpotDto ds)
     {
-        var dockingSpot = _dockingSpotRepository.GetDockingSpotById(ds.Id);
+        var dockingSpot = _dockingSpotRepository.GetDockingSpotById(id);
         if (dockingSpot == null)
         {
             throw new ModelInvalidException("DockingSpot not found");
