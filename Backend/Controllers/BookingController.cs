@@ -1,6 +1,8 @@
 using Backend.DTO;
+using Backend.DTO.Booking;
 using Backend.Exceptions;
 using Backend.Interfaces;
+using Backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,4 +48,38 @@ public class BookingController : ControllerBase
             return await Task.FromResult(StatusCode(401, new StatusReturnDto(e.Message, null)));
         }
     }
+
+    [HttpGet]
+    public async Task<ActionResult<List<Booking>>> GetAll()
+    {
+        var bookings = _bookingService.GetAll();
+        return await Task.FromResult(Ok(bookings));
+    }
+
+    [HttpGet("my")]
+    public async Task<ActionResult<List<Booking>>> GetMyBookings()
+    {
+        if (!int.TryParse(User.Identity?.Name, out int userId))
+        {
+            return await Task.FromResult(Unauthorized("Invalid or missing user identity"));
+        }
+
+        var bookings = _bookingService.GetBookingsByUserId(userId);
+        return await Task.FromResult(Ok(bookings));
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<StatusReturnDto>> Update(int id, [FromBody] UpdateBookingDto dto)
+    {
+        try
+        {
+            _bookingService.Update(id, dto);
+            return await Task.FromResult(Ok(new StatusReturnDto("Booking updated", id)));
+        }
+        catch (ModelNotFoundException e)
+        {
+            return await Task.FromResult(NotFound(new StatusReturnDto(e.Message, null)));
+        }
+    }
+
 }
