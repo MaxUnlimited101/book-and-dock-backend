@@ -25,13 +25,13 @@ public class BookingController : ControllerBase
     {
         try
         {
-            int id = _bookingService.Create(createBookingDto);
+            int id = await _bookingService.CreateAsync(createBookingDto);
             return await Task.FromResult(
                 Ok(new StatusReturnDto("Booking created successfully, id given", id)));
         }
         catch (ModelAlreadyExistsException e)
         {
-            return await Task.FromResult(StatusCode(401, new StatusReturnDto(e.Message, null)));
+            return await Task.FromResult(StatusCode(400, new StatusReturnDto(e.Message, null)));
         }
     }
 
@@ -56,6 +56,7 @@ public class BookingController : ControllerBase
         return await Task.FromResult(Ok(bookings));
     }
 
+    // TODO: fix this 
     [HttpGet("my")]
     public async Task<ActionResult<List<Booking>>> GetMyBookings()
     {
@@ -75,6 +76,20 @@ public class BookingController : ControllerBase
         {
             _bookingService.Update(id, dto);
             return await Task.FromResult(Ok(new StatusReturnDto("Booking updated", id)));
+        }
+        catch (ModelNotFoundException e)
+        {
+            return await Task.FromResult(NotFound(new StatusReturnDto(e.Message, null)));
+        }
+    }
+    
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Booking>> GetById(int id)
+    {
+        try
+        {
+            var booking = _bookingService.GetBookingById(id);
+            return await Task.FromResult(Ok(booking));
         }
         catch (ModelNotFoundException e)
         {

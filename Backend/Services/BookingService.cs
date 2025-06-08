@@ -11,19 +11,22 @@ public class BookingService : IBookingService
     private readonly IBookingRepository _bookingRepository;
     private readonly IUserService _userRepository;
     private readonly IDockingSpotService _dockService;
+    private readonly IPaymentMethodService _paymentMethodService;
 
-    public BookingService(IBookingRepository bookingRepository, IUserService userService, IDockingSpotService dockService)
+    public BookingService(IBookingRepository bookingRepository, IUserService userService,
+        IDockingSpotService dockService, IPaymentMethodService paymentMethodService)
     {
         _bookingRepository = bookingRepository;
         _userRepository = userService;
         _dockService = dockService;
+        _paymentMethodService = paymentMethodService;
     }
-    
-    public int Create(CreateBookingDto booking) 
+
+    public async Task<int> CreateAsync(CreateBookingDto booking)
     {
         Booking b = new();
 
-        if (!_userRepository.CheckIfUserExistsByIdAndRole(booking.SailorId, new Role()))
+        if (!_userRepository.CheckIfUserExistsById(booking.SailorId))
         {
             throw new ModelNotFoundException("Invalid user");
         }
@@ -37,7 +40,20 @@ public class BookingService : IBookingService
         {
             throw new InvalidDataException("End date cannot be earlier than start date");
         }
+
+        b.SailorId = booking.SailorId;
+        b.DockingSpotId = booking.DockingSpotId;
+        b.StartDate = booking.StartDate;
+        b.EndDate = booking.EndDate;
+        b.People = booking.People;
         
+        // this might throw
+        b.PaymentMethod = await _paymentMethodService.GetPaymentMethodByNameAsync(booking.Payment);
+        
+        b.PaymentMethodId = b.PaymentMethod.Id;
+        b.CreatedOn = DateTime.UtcNow;
+        b.IsPaid = false;
+
         return _bookingRepository.Create(b);
     }
 
@@ -61,7 +77,7 @@ public class BookingService : IBookingService
     public void Update(int id, UpdateBookingDto dto)
     {
         var booking = _bookingRepository.GetById(id)
-            ?? throw new ModelNotFoundException("Booking not found");
+                      ?? throw new ModelNotFoundException("Booking not found");
 
         if (dto.EndDate <= dto.StartDate)
             throw new InvalidDataException("End date cannot be before start date");
@@ -74,4 +90,8 @@ public class BookingService : IBookingService
         _bookingRepository.Update(booking);
     }
 
+    public Booking? GetBookingById(int id)
+    {
+        return _bookingRepository.GetById(id);
+    }
 }

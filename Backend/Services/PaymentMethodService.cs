@@ -56,4 +56,15 @@ public class PaymentMethodService : IPaymentMethodService
 
         await _paymentMethodRepository.DeletePaymentMethodAsync(existingPaymentMethod.Id);
     }
+
+    public async Task<PaymentMethod> GetPaymentMethodByNameAsync(string name)
+    {
+        var paymentMethods = await _paymentMethodRepository.GetAllPaymentMethodsAsync();
+        var paymentMethod = paymentMethods.FirstOrDefault(pm => pm.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        
+        if (paymentMethod == null)
+            throw new ModelInvalidException("Payment method not found");
+
+        return paymentMethod;
+    }
 }

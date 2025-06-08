@@ -2,9 +2,8 @@ namespace Backend.DTO;
 
 public record CreateBookingDto(
     int SailorId,
-    int DockId,
-    DateOnly StartDate,
-    DateOnly EndDate,
+    DateTime StartDate,
+    DateTime EndDate,
     int People,
     string Payment,
     int DockingSpotId

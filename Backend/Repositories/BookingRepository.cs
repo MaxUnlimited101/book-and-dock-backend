@@ -16,9 +16,9 @@ public class BookingRepository : IBookingRepository
     
     public int Create(Booking booking)
     {
-        int id = _context.Bookings.Add(booking).Entity.Id;
+        _context.Bookings.Add(booking);
         _context.SaveChanges();
-        return id;
+        return booking.Id;
     }
 
     public void Delete(int id)

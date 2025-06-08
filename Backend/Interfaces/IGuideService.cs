@@ -9,7 +9,7 @@ namespace Backend.Interfaces
         IEnumerable<GuideDto> GetAllGuides();
         GuideDto? GetGuideById(int id);
         void CreateGuide(GuideDto guide);
-        void UpdateGuide(GuideDto updatedGuide);
+        void UpdateGuide(int id, GuideDto updatedGuide);
         void DeleteGuide(int id);
     }
 }

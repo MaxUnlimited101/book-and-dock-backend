@@ -29,8 +29,8 @@ public class DockingSpotRepository : IDockingSpotRepository
         if (date.HasValue)
         {
             query = query.Where(d => !d.Bookings.Any(b =>
-                b.StartDate.ToDateTime(TimeOnly.MinValue) <= date.Value.Date &&
-                b.EndDate.ToDateTime(TimeOnly.MinValue) >= date.Value.Date));
+                b.StartDate <= date.Value.Date &&
+                b.EndDate >= date.Value.Date));
         }
 
         if (price.HasValue)

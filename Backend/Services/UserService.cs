@@ -51,4 +51,9 @@ public class UserService : IUserService
     {
         return _userRepository.CountUsersByRoles();
     }
+
+    public bool CheckIfUserExistsById(int id)
+    {
+        return _userRepository.CheckIfUserExistsById(id);
+    }
 }
