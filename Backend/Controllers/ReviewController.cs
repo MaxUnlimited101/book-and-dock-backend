@@ -54,10 +54,10 @@ public class ReviewController : ControllerBase
         return Created($"/api/review/{createdReview.Id}", createdReview);
     }
 
-    [HttpPut]
-    public async Task<IActionResult> UpdateReviewAsync([FromBody] UpdateReviewDTO reviewDto)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateReviewAsync(int id, [FromBody] UpdateReviewDTO reviewDto)
     {
-        var updated = await _reviewService.UpdateReviewAsync(reviewDto.Id, reviewDto);
+        var updated = await _reviewService.UpdateReviewAsync(id, reviewDto);
         if (!updated)
         {
             return NotFound(new { Message = "Review not found or update failed." });

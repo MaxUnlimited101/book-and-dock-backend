@@ -55,7 +55,7 @@ namespace Backend.Repositories
             {
                 return false;
             }
-            _context.Entry(review).CurrentValues.SetValues(updatedReview);
+            _context.Reviews.Update(review);
             _context.SaveChanges();
             return true;
         }
@@ -67,7 +67,7 @@ namespace Backend.Repositories
             {
                 return false;
             }
-            _context.Entry(review).CurrentValues.SetValues(updatedReview);
+            _context.Reviews.Update(review);
             await _context.SaveChangesAsync();
             return true;
         }
