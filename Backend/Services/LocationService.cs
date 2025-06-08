@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Backend.Interfaces;
 using Backend.DTO;
 using Backend.Exceptions;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Backend.Services;
 
@@ -82,16 +83,17 @@ public class LocationService : ILocationService
     public async Task<LocationDto?> GetLocationByIdAsync(int id)
     {
         var location = await _locationRepository.GetLocationByIdAsync(id);
-        if (location == null)
-        {
-            throw new ModelInvalidException($"Location with ID {id} not found.");
-        }
-        return LocationDto.FromModel(location);
+        return location == null ? null : LocationDto.FromModel(location);
     }
 
-    public async Task UpdateLocationAsync(LocationDto location)
+    public async Task UpdateLocationAsync(int id, LocationDto location)
     {
-        Location l = LocationDto.ToModel(location);
+        location = location with { Id = id };
+        Location l = await _locationRepository.GetLocationByIdAsync(id) ?? throw new ModelInvalidException($"Location with ID {id} not found.");
+        l.CreatedOn = location.CreatedOn ?? l.CreatedOn;
+        l.Latitude = location.Latitude;
+        l.Longitude = location.Longitude;
+        l.Town = location.Town;
         Port? port = null;
         DockingSpot? dockingSpot = null;
         if (location.PortId != null)
