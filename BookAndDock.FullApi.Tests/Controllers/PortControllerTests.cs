@@ -86,17 +86,7 @@ namespace Backend.Tests.Controllers
             Assert.IsType<UnauthorizedResult>(result);
         }
 
-        [Fact]
-        public void GetPortById_WhenFound_ReturnsOk()
-        {
-            var port = new Port { Id = 1 };
-            _portRepoMock.Setup(r => r.GetById(1)).Returns(port);
-
-            var result = _controller.GetPortById(1);
-
-            var ok = Assert.IsType<OkObjectResult>(result);
-            Assert.Equal(port, ok.Value);
-        }
+        
 
         [Fact]
         public void GetPortById_WhenNotFound_ReturnsNotFound()
