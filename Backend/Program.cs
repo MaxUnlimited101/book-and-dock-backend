@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Npgsql;
+using Amazon.S3;
+using Amazon;
 
 namespace Backend;
 
@@ -19,7 +21,7 @@ public class Program
 
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
+        // Add services to the container
         builder.Services.AddAuthorization();
         builder.Services.AddScoped<RegistrationService>();
         builder.Services.AddScoped<JwtService>();
@@ -32,7 +34,7 @@ public class Program
                 System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
         });
 
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        // Swagger setup
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {
@@ -68,37 +70,33 @@ public class Program
             });
         });
 
-        // Ensure database exists
-        // create if not exists
+        // Get DB connection string from environment variable
         string connectionString = Environment.GetEnvironmentVariable("POSTGRES__DEFAULT_DB_CONNECTION_STRING")
-             ?? throw new Exception("POSTGRES__DEFAULT_DB_CONNECTION_STRING not set");
+            ?? throw new Exception("POSTGRES__DEFAULT_DB_CONNECTION_STRING not set");
 
+        // Optional: create database if not exists
         using (var connection = new NpgsqlConnection(connectionString))
         {
             connection.Open();
-            using (var command = new NpgsqlCommand($"CREATE DATABASE \"{Environment.GetEnvironmentVariable("POSTGRES_DB")}\"", connection))
+            using var command = new NpgsqlCommand(
+                $"CREATE DATABASE \"{Environment.GetEnvironmentVariable("POSTGRES_DB")}\"", connection);
+            try
             {
-                try
-                {
-                    command.ExecuteNonQuery();
-                    Console.WriteLine("Database created successfully.");
-                }
-                catch (NpgsqlException ex)
-                {
-                    System.Console.WriteLine($"Error creating database: {ex.Message}, skipping...");
-                }
+                command.ExecuteNonQuery();
+                Console.WriteLine("Database created successfully.");
+            }
+            catch (NpgsqlException ex)
+            {
+                Console.WriteLine($"Database already exists or error: {ex.Message}");
             }
         }
 
-        builder.Services.AddNpgsql<BookAndDockContext>(
-            Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING"));
-
-        // Add context
+        // Add DbContext
         builder.Services.AddDbContext<BookAndDockContext>(options =>
             options.UseNpgsql(Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING"))
         );
 
-        // Add repositories
+        // Register repositories
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IDockingSpotRepository, DockingSpotRepository>();
         builder.Services.AddScoped<IGuideRepository, GuideRepository>();
@@ -106,37 +104,40 @@ public class Program
         builder.Services.AddScoped<IBookingRepository, BookingRepository>();
         builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
         builder.Services.AddScoped<IPortRepository, PortRepository>();
-        builder.Services.AddScoped<IGuideRepository, GuideRepository>();
         builder.Services.AddScoped<ILocationRepository, LocationRepository>();
         builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
         builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
         builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
         builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-        // builder.Services.AddScoped<IImageRepository, ImageRepository>();
 
-        // Add services
+        // Register services
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IDockingSpotService, DockingSpotService>();
         builder.Services.AddScoped<IGuideService, GuideService>();
         builder.Services.AddScoped<ICommentService, CommentService>();
         builder.Services.AddScoped<IBookingService, BookingService>();
         builder.Services.AddScoped<IReviewService, ReviewService>();
-        builder.Services.AddScoped<IGuideService, GuideService>();
         builder.Services.AddScoped<ILocationService, LocationService>();
         builder.Services.AddScoped<IPortService, PortService>();
         builder.Services.AddScoped<INotificationService, NotificationService>();
         builder.Services.AddScoped<IServiceService, ServiceService>();
         builder.Services.AddScoped<IPaymentMethodService, PaymentMethodService>();
         builder.Services.AddScoped<IRoleService, RoleService>();
-        // builder.Services.AddScoped<IImageService, ImageService>();
+        builder.Services.AddScoped<IImageService, ImageService>();
 
-        // Configure Npgsql to map DateTime to timestamp with time zone
-        // AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+        // Amazon S3 Integration
+        builder.Services.AddSingleton<IAmazonS3>(sp =>
+        {
+            return new AmazonS3Client(
+                builder.Configuration["AWS:AccessKey"],
+                builder.Configuration["AWS:SecretKey"],
+                RegionEndpoint.GetBySystemName(builder.Configuration["AWS:Region"])
+            );
+        });
 
-        // builder.Services.AddDbContext<BookAndDockContext>(options =>
-        //     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
-        // );
+        builder.Services.AddSingleton<S3Service>();
 
+        // JWT Auth setup
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -170,27 +171,20 @@ public class Program
                 };
             });
 
-
+        // CORS
         builder.Services.AddCors(options =>
         {
             options.AddDefaultPolicy(policy =>
             {
                 policy.AllowAnyOrigin()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-                    // .AllowCredentials();
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
             });
         });
 
-
+        // Build and configure app
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
-        // if (app.Environment.IsDevelopment())
-        // {
-        //     app.UseSwagger();
-        //     app.UseSwaggerUI();
-        // }
         app.UseSwagger();
         app.UseSwaggerUI();
 
@@ -198,9 +192,7 @@ public class Program
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
-
         app.MapControllers();
-
         app.Run();
     }
 }
