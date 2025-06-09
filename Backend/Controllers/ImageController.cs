@@ -1,8 +1,11 @@
+using Backend.DTO.Image;
+using Backend.Interfaces;
 using Backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace Backend.Controllers
 {
@@ -11,41 +14,39 @@ namespace Backend.Controllers
     [Authorize]
     public class ImageController : ControllerBase
     {
-        // private readonly ImageService _imageService;
+        private readonly IImageService _imageService;
 
-        // public ImageController(ImageService imageService)
-        // {
-        //     _imageService = imageService;
-        // }
+        public ImageController(IImageService imageService)
+        {
+            _imageService = imageService;
+        }
 
-        // [HttpGet]
-        // public IActionResult GetAllImages()
-        // {
-            
-        // }
+        [HttpPost("upload")]
+        public async Task<IActionResult> Upload([FromForm] UploadImageDto dto)
+        {
+            var result = await _imageService.UploadImageAsync(dto);
+            return Ok(result);
+        }
 
-        // [HttpGet("{id}")]
-        // public IActionResult GetImage(int id)
-        // {
-            
-        // }
+        [HttpGet("download/{id}")]
+        public async Task<IActionResult> DownloadImageById(int id)
+        {
+            var stream = await _imageService.GetImageStreamByIdAsync(id);
+            if (stream == null)
+                return NotFound("Image not found in database or S3");
 
-        // [HttpPost]
-        // public IActionResult AddImage([FromBody] string imageUrl)
-        // {
-            
-        // }
+            return File(stream, "application/octet-stream");
+        }
 
-        // [HttpPut("{id}")]
-        // public IActionResult UpdateImage(int id, [FromBody] string newImageUrl)
-        // {
-            
-        // }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteImage(int id)
+        {
+            var success = await _imageService.DeleteImageByIdAsync(id);
+            if (!success)
+                return NotFound("Image not found or already deleted.");
 
-        // [HttpDelete("{id}")]
-        // public IActionResult DeleteImage(int id)
-        // {
-            
-        // }
+            return Ok("Image deleted successfully.");
+        }
     }
+
 }
