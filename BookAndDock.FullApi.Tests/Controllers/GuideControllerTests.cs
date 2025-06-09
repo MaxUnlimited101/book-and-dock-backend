@@ -84,7 +84,9 @@ namespace Backend.Tests.Controllers
         {
             var guide = new GuideDto(1, "Updated", "Content", 1, null, true);
 
-            var result = _controller.Update(guide);
+            _guideServiceMock.Setup(s => s.UpdateGuide(1, guide)).Verifiable();
+
+            var result = _controller.Update(1, guide);
 
             Assert.IsType<OkResult>(result);
         }
@@ -93,9 +95,11 @@ namespace Backend.Tests.Controllers
         public void Update_Invalid_ReturnsBadRequest()
         {
             var guide = new GuideDto(1, "Updated", "Content", 1, null, true);
-            _guideServiceMock.Setup(s => s.UpdateGuide(guide)).Throws(new ModelInvalidException("Update failed"));
 
-            var result = _controller.Update(guide);
+            _guideServiceMock.Setup(s => s.UpdateGuide(1, guide))
+                .Throws(new ModelInvalidException("Update failed"));
+
+            var result = _controller.Update(1, guide);
 
             var bad = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal("Update failed", bad.Value);

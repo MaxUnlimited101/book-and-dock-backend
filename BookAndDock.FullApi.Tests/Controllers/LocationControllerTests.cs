@@ -114,7 +114,7 @@ namespace Backend.Tests.Controllers
             _locationRepoMock.Setup(r => r.GetLocationByIdAsync(1)).ReturnsAsync(new Location { Id = 1 });
             _portRepoMock.Setup(p => p.GetById(1)).Returns(new Port());
 
-            var result = await _controller.UpdateLocation(dto);
+            var result = await _controller.UpdateLocation(1, dto);
 
             Assert.IsType<OkResult>(result);
         }
@@ -125,7 +125,7 @@ namespace Backend.Tests.Controllers
             var dto = new LocationDto(1, null, 10, 20, "Town", 1, null);
             _locationRepoMock.Setup(r => r.GetLocationByIdAsync(1)).ThrowsAsync(new ModelInvalidException("Location with ID 1 not found."));
 
-            var result = await _controller.UpdateLocation(dto);
+            var result = await _controller.UpdateLocation(1, dto);
 
             var notFound = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal("Error updating location: Location with ID 1 not found.", notFound.Value);
@@ -139,7 +139,7 @@ namespace Backend.Tests.Controllers
             _portRepoMock.Setup(p => p.GetById(1)).Returns(new Port());
             _dockRepoMock.Setup(d => d.GetDockingSpotById(2)).Returns(new DockingSpot());
 
-            var result = await _controller.UpdateLocation(dto);
+            var result = await _controller.UpdateLocation(1, dto);
 
             var bad = Assert.IsType<BadRequestObjectResult>(result);
             Assert.StartsWith("Error updating location:", bad.Value.ToString());

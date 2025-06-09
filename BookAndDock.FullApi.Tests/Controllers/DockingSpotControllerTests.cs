@@ -64,7 +64,9 @@ namespace Backend.Tests.Controllers
         {
             var dto = new DockingSpotDto(1, "Spot B", "Updated", 1, 1, 200, 20, false, DateTime.UtcNow);
 
-            var result = _controller.UpdateDockingSpot(dto);
+            _dockServiceMock.Setup(s => s.UpdateDockingSpot(1, dto)).Verifiable();
+
+            var result = _controller.UpdateDockingSpot(1, dto);
 
             Assert.IsType<OkResult>(result);
         }
@@ -73,13 +75,16 @@ namespace Backend.Tests.Controllers
         public void UpdateDockingSpot_Invalid_ReturnsBadRequest()
         {
             var dto = new DockingSpotDto(1, "Spot B", "Updated", 1, 1, 200, 20, false, DateTime.UtcNow);
-            _dockServiceMock.Setup(s => s.UpdateDockingSpot(dto)).Throws(new ModelInvalidException("Failed"));
 
-            var result = _controller.UpdateDockingSpot(dto);
+            _dockServiceMock.Setup(s => s.UpdateDockingSpot(1, dto))
+                .Throws(new ModelInvalidException("Failed"));
+
+            var result = _controller.UpdateDockingSpot(1, dto);
 
             var bad = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal("Failed", bad.Value);
         }
+
 
         [Fact]
         public void DeleteDockingSpot_Valid_ReturnsOk()

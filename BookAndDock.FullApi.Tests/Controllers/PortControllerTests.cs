@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using Backend.Controllers;
-using Backend.DTO.Port;
+using Backend.DTO;
 using Backend.Interfaces;
 using Backend.Models;
 using Microsoft.AspNetCore.Http;
@@ -39,7 +39,14 @@ namespace Backend.Tests.Controllers
         {
             _portRepoMock.Setup(r => r.GetById(1)).Returns((Port)null);
 
-            var result = _controller.UpdatePort(1, new PortDto("Name", "Desc", true));
+            var result = _controller.UpdatePort(1, new PortDto(
+                Id: 0,
+                Name: "Harbor A",
+                Description: "Nice place",
+                IsApproved: true,
+                OwnerId: 1,
+                CreatedOn: DateTime.UtcNow)
+            );
 
             Assert.IsType<NotFoundResult>(result);
         }

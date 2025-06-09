@@ -1,6 +1,4 @@
-﻿// File: Backend.Tests/Services/LocationServiceTests.cs
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -120,36 +118,36 @@ namespace Backend.Tests.Services
         [Fact]
         public async Task UpdateLocationAsync_PortAndDockNull_Throws()
         {
-            var dto = new LocationDto(0, null, 1, 1, "Town", null, null);
-            var ex = await Assert.ThrowsAsync<ModelInvalidException>(() => _svc.UpdateLocationAsync(dto));
+            var dto = new LocationDto(8, null, 1, 1, "Town", null, null);
+            var ex = await Assert.ThrowsAsync<ModelInvalidException>(() => _svc.UpdateLocationAsync(dto.Id, dto));
             Assert.Equal("Location must have either PortId or DockingSpotId set.", ex.Message);
         }
 
         [Fact]
         public async Task UpdateLocationAsync_BothPortAndDockSet_Throws()
         {
-            var dto = new LocationDto(0, null, 1, 1, "Town", 1, 2);
+            var dto = new LocationDto(9, null, 1, 1, "Town", 1, 2);
             _portRepoMock.Setup(p => p.GetById(1)).Returns(new Port { Id = 1 });
             _dockRepoMock.Setup(d => d.GetDockingSpotById(2)).Returns(new DockingSpot { Id = 2 });
-            var ex = await Assert.ThrowsAsync<ModelInvalidException>(() => _svc.UpdateLocationAsync(dto));
+            var ex = await Assert.ThrowsAsync<ModelInvalidException>(() => _svc.UpdateLocationAsync(dto.Id, dto));
             Assert.Equal("Location cannot have both PortId and DockingSpotId set.", ex.Message);
         }
 
         [Fact]
         public async Task UpdateLocationAsync_PortSetButNotFound_Throws()
         {
-            var dto = new LocationDto(0, null, 1, 1, "Town", 5, null);
+            var dto = new LocationDto(10, null, 1, 1, "Town", 5, null);
             _portRepoMock.Setup(p => p.GetById(5)).Returns((Port?)null);
-            var ex = await Assert.ThrowsAsync<ModelInvalidException>(() => _svc.UpdateLocationAsync(dto));
+            var ex = await Assert.ThrowsAsync<ModelInvalidException>(() => _svc.UpdateLocationAsync(dto.Id, dto));
             Assert.Equal("Port with ID 5 not found.", ex.Message);
         }
 
         [Fact]
         public async Task UpdateLocationAsync_DockSetButNotFound_Throws()
         {
-            var dto = new LocationDto(0, null, 1, 1, "Town", null, 5);
+            var dto = new LocationDto(11, null, 1, 1, "Town", null, 5);
             _dockRepoMock.Setup(d => d.GetDockingSpotById(5)).Returns((DockingSpot?)null);
-            var ex = await Assert.ThrowsAsync<ModelInvalidException>(() => _svc.UpdateLocationAsync(dto));
+            var ex = await Assert.ThrowsAsync<ModelInvalidException>(() => _svc.UpdateLocationAsync(dto.Id, dto));
             Assert.Equal("Docking spot with ID 5 not found.", ex.Message);
         }
     }

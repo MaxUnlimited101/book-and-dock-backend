@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Backend.DTO.Port;
+using Backend.DTO;
 using Backend.Interfaces;
 using Backend.Models;
 using Backend.Services;
@@ -23,7 +23,14 @@ namespace Backend.Tests.Services
         [Fact]
         public void Create_ValidDto_ReturnsNewId()
         {
-            var dto = new PortDto("Harbor A", "Nice place", true);
+            var dto = new PortDto(
+                Id: 0,
+                Name: "Harbor A",
+                Description: "Nice place",
+                IsApproved: true,
+                OwnerId: 1,
+                CreatedOn: DateTime.UtcNow
+            );
             _repoMock.Setup(r => r.Create(It.IsAny<Port>())).Returns(42);
 
             var result = _svc.Create(dto);
