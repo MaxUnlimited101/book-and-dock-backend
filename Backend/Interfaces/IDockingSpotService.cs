@@ -11,6 +11,6 @@ public interface IDockingSpotService
     public bool CheckIfDockingSpotExistsById(int id);
     public DockingSpot? GetDockingSpotById(int id);
     public void CreateDockingSpot(DockingSpotDto ds);
-    public void UpdateDockingSpot(DockingSpotDto ds);
+    public void UpdateDockingSpot(int id, DockingSpotDto ds);
     public void DeleteDockingSpot(int id);
 }

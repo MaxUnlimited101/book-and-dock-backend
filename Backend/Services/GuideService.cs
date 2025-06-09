@@ -65,9 +65,9 @@ public class GuideService : IGuideService
         return new GuideDto(guide.Id, guide.Title, guide.Content, guide.CreatedBy!.Value, guide.CreatedOn, guide.IsApproved);
     }
 
-    public void UpdateGuide(GuideDto updatedGuide)
+    public void UpdateGuide(int id, GuideDto updatedGuide)
     {
-        var guide = _guideRepository.GetGuideById(updatedGuide.Id);
+        var guide = _guideRepository.GetGuideById(id);
         if (guide == null)
         {
             throw new ModelInvalidException("Guide not found");

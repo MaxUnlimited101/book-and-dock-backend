@@ -15,8 +15,6 @@ public partial class Review
 
     public DateTime CreatedAt { get; set; }
 
-    public DateTime? UpdatedAt { get; set; }
-
     public int DockId { get; set; }
 
     public virtual Port Dock { get; set; } = null!;

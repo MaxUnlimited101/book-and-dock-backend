@@ -10,7 +10,7 @@ using Backend.Exceptions;
 namespace Backend.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/guide")]
     [Authorize]
     public class GuideController : ControllerBase
     {
@@ -52,12 +52,12 @@ namespace Backend.Controllers
             }
         }
 
-        [HttpPut]
-        public IActionResult Update([FromBody] GuideDto updatedGuide)
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] GuideDto updatedGuide)
         {
             try
             {
-                _guideService.UpdateGuide(updatedGuide);
+                _guideService.UpdateGuide(id, updatedGuide);
                 return Ok();
             }
             catch (ModelInvalidException ex)

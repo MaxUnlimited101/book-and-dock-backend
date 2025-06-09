@@ -1,10 +1,10 @@
 using Backend.DTO;
 using Backend.Exceptions;
-using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Backend.Interfaces;
 
 namespace Backend.Controllers
 {
@@ -13,9 +13,9 @@ namespace Backend.Controllers
     [Authorize]
     public class LocationController : ControllerBase
     {
-        private readonly LocationService _locationService;
+        private readonly ILocationService _locationService;
 
-        public LocationController(LocationService locationService)
+        public LocationController(ILocationService locationService)
         {
             _locationService = locationService;
         }
@@ -56,17 +56,17 @@ namespace Backend.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateLocation([FromBody] LocationDto updatedLocation)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateLocation(int id, [FromBody] LocationDto updatedLocation)
         {
             try
             {
-                var location = await _locationService.GetLocationByIdAsync(updatedLocation.Id);
+                var location = await _locationService.GetLocationByIdAsync(id);
                 if (location == null)
                 {
                     return NotFound($"Location with ID {updatedLocation.Id} not found.");
                 }
-                await _locationService.UpdateLocationAsync(updatedLocation);
+                await _locationService.UpdateLocationAsync(id, updatedLocation);
                 return Ok();
             }
             catch (ModelInvalidException ex)

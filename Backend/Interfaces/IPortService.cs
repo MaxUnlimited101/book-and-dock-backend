@@ -1,4 +1,4 @@
-﻿using Backend.DTO.Port;
+﻿using Backend.DTO;
 
 namespace Backend.Interfaces
 {

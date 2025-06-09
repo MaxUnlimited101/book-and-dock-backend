@@ -9,7 +9,7 @@ using Backend.Interfaces;
 namespace Backend.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/pm")]
     [Authorize]
     public class PaymentMethodController : ControllerBase
     {

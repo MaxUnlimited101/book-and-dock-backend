@@ -29,6 +29,7 @@ WORKDIR /app
 
 # Copy the published application from the build stage
 COPY --from=build /app/publish .
+
 # Copy .env file to the app directory
 COPY .env /app
 

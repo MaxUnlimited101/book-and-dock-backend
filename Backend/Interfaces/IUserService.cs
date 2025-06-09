@@ -16,4 +16,6 @@ public interface IUserService
     Task DeleteUserByIdAsync(int id);
     
     Dictionary<string, int> CountUsersByRoles();
+
+    public bool CheckIfUserExistsById(int id);
 }

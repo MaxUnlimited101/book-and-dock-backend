@@ -80,7 +80,7 @@ public class UsersController : ControllerBase
     /// Returns user counts by role, so (role names not matching) {"user": 213, "admin": 43, "dockOwner": 134}
     /// </summary>
     /// <returns></returns>
-    [HttpGet("/UserCount")]
+    [HttpGet("counts")]
     public Dictionary<string, int> GetUserCountsByRoles()
     {
         Console.WriteLine("Getting user counts by roles");
