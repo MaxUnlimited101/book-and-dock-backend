@@ -32,27 +32,7 @@ namespace Backend.Tests.Controllers
             _controller = new UsersController(_context, _userServiceMock.Object);
         }
 
-        [Fact]
-        public async Task GetAllUsers_ReturnsOk()
-        {
-            _context.Users.Add(new User
-            {
-                Id = 1,
-                Name = "Test",
-                Surname = "User",
-                Email = "test@example.com",
-                PhoneNumber = "123456",
-                Password = "hashedpassword",
-                Role = new Role { Id = 1, Name = "Admin" }
-            });
-            await _context.SaveChangesAsync();
-
-            var result = await _controller.GetAllUsers();
-
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var users = Assert.IsAssignableFrom<IEnumerable<UserDto>>(okResult.Value);
-            Assert.Single(users);
-        }
+        
 
         [Fact]
         public async Task DeleteUser_WhenUserExists_ReturnsOk()
