@@ -23,13 +23,18 @@ public class BookingRepository : IBookingRepository
 
     public void Delete(int id)
     {
-        _context.Bookings.Remove(_context.Bookings.Find(id)!);
+        var booking = GetById(id);
+        if (booking == null)
+        {
+            return;
+        }
+        _context.Bookings.Remove(booking);
         _context.SaveChanges();
     }
 
     public bool CheckIfExistsById(int id)
     {
-        return _context.Bookings.Find(id) != null;
+        return _context.Bookings.Any(b => b.Id == id);
     }
 
     public Booking? GetById(int id)
