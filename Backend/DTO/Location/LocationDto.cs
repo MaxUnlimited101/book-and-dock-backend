@@ -9,8 +9,7 @@ public record LocationDto(
     [Required] double Latitude,
     [Required] double Longitude,
     [Required] string Town,
-    int? PortId,
-    int? DockingSpotId
+    int? PortId
 )
 {
     static public LocationDto FromModel(Location location)
@@ -21,8 +20,7 @@ public record LocationDto(
             location.Latitude,
             location.Longitude,
             location.Town,
-            location.PortId,
-            location.DockingSpotId
+            location.PortId
         );
     }
 
@@ -37,8 +35,7 @@ public record LocationDto(
             Latitude = location.Latitude,
             Longitude = location.Longitude,
             Town = location.Town,
-            PortId = location.PortId,
-            DockingSpotId = location.DockingSpotId
+            PortId = location.PortId
         };
     }
 }

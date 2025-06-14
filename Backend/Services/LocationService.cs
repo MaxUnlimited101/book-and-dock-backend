@@ -36,18 +36,18 @@ public class LocationService : ILocationService
                 throw new ModelInvalidException($"Port with ID {location.PortId} not found.");
             }
         }
-        if (location.DockingSpotId != null)
-        {
-            dockingSpot = _dockingSpotRepository.GetDockingSpotById(location.DockingSpotId.Value);
-            if (dockingSpot == null)
-            {
-                throw new ModelInvalidException($"Docking spot with ID {location.DockingSpotId} not found.");
-            }
-        }
-        if (port != null && dockingSpot != null)
-        {
-            throw new ModelInvalidException("Location cannot have both PortId and DockingSpotId set.");
-        }
+        // if (location.DockingSpotId != null)
+        // {
+        //     dockingSpot = _dockingSpotRepository.GetDockingSpotById(location.DockingSpotId.Value);
+        //     if (dockingSpot == null)
+        //     {
+        //         throw new ModelInvalidException($"Docking spot with ID {location.DockingSpotId} not found.");
+        //     }
+        // }
+        // if (port != null && dockingSpot != null)
+        // {
+        //     throw new ModelInvalidException("Location cannot have both PortId and DockingSpotId set.");
+        // }
         if (port == null && dockingSpot == null)
         {
             throw new ModelInvalidException("Location must have either PortId or DockingSpotId set.");
@@ -104,18 +104,18 @@ public class LocationService : ILocationService
                 throw new ModelInvalidException($"Port with ID {location.PortId} not found.");
             }
         }
-        if (location.DockingSpotId != null)
-        {
-            dockingSpot = _dockingSpotRepository.GetDockingSpotById(location.DockingSpotId.Value);
-            if (dockingSpot == null)
-            {
-                throw new ModelInvalidException($"Docking spot with ID {location.DockingSpotId} not found.");
-            }
-        }
-        if (port != null && dockingSpot != null)
-        {
-            throw new ModelInvalidException("Location cannot have both PortId and DockingSpotId set.");
-        }
+        // if (location.DockingSpotId != null)
+        // {
+        //     dockingSpot = _dockingSpotRepository.GetDockingSpotById(location.DockingSpotId.Value);
+        //     if (dockingSpot == null)
+        //     {
+        //         throw new ModelInvalidException($"Docking spot with ID {location.DockingSpotId} not found.");
+        //     }
+        // }
+        // if (port != null && dockingSpot != null)
+        // {
+        //     throw new ModelInvalidException("Location cannot have both PortId and DockingSpotId set.");
+        // }
         if (port == null && dockingSpot == null)
         {
             throw new ModelInvalidException("Location must have either PortId or DockingSpotId set.");

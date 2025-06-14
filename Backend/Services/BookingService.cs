@@ -74,7 +74,7 @@ public class BookingService : IBookingService
     public List<Booking> GetBookingsByUserId(int userId) =>
         _bookingRepository.GetAll().Where(b => b.SailorId == userId).ToList();
 
-    public void Update(int id, UpdateBookingDto dto)
+    public async void Update(int id, UpdateBookingDto dto)
     {
         var booking = _bookingRepository.GetById(id)
                       ?? throw new ModelNotFoundException("Booking not found");
@@ -85,7 +85,8 @@ public class BookingService : IBookingService
         booking.StartDate = dto.StartDate;
         booking.EndDate = dto.EndDate;
         booking.People = dto.People;
-        booking.PaymentMethod = new PaymentMethod { Name = dto.PaymentMethod };
+        // this might throw
+        booking.PaymentMethod = await _paymentMethodService.GetPaymentMethodByNameAsync(dto.PaymentMethod);
 
         _bookingRepository.Update(booking);
     }
