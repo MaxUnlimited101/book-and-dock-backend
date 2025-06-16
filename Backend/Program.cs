@@ -70,6 +70,8 @@ public class Program
             });
         });
 
+        Stripe.StripeConfiguration.ApiKey = Environment.GetEnvironmentVariable("STRIPE__SECRET_KEY");
+
         // Get DB connection string from environment variable
         string connectionString = Environment.GetEnvironmentVariable("POSTGRES__DEFAULT_DB_CONNECTION_STRING")
             ?? throw new Exception("POSTGRES__DEFAULT_DB_CONNECTION_STRING not set");
