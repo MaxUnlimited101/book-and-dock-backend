@@ -8,13 +8,18 @@ public class S3Service
     private readonly IAmazonS3 _s3Client;
     private readonly string _bucketName;
 
-    public S3Service(IConfiguration config)
+    public S3Service()
     {
-        _bucketName = config["AWS:BucketName"];
+        _bucketName = Environment.GetEnvironmentVariable("AWS__BucketName")
+            ?? throw new Exception("AWS__BucketName not set");
+
         _s3Client = new AmazonS3Client(
-            config["AWS:AccessKey"],
-            config["AWS:SecretKey"],
-            Amazon.RegionEndpoint.GetBySystemName(config["AWS:Region"])
+            Environment.GetEnvironmentVariable("AWS__AccessKey"),
+            Environment.GetEnvironmentVariable("AWS__SecretKey"),
+            Amazon.RegionEndpoint.GetBySystemName(
+                Environment.GetEnvironmentVariable("AWS__Region")
+                    ?? throw new Exception("AWS__Region not set")
+            )
         );
     }
 
@@ -37,17 +42,17 @@ public class S3Service
         return $"https://{_bucketName}.s3.amazonaws.com/{fileKey}";
     }
 
-    public async Task<Stream?> GetFileAsync(string key)
+    public async Task<(Stream? Stream, string? ContentType)> GetFileAsync(string key)
     {
         try
         {
             var response = await _s3Client.GetObjectAsync(_bucketName, key);
-            return response.ResponseStream;
+            return (response.ResponseStream, response.Headers.ContentType);
         }
         catch (AmazonS3Exception e)
         {
             Console.WriteLine($"S3 error: {e.Message}");
-            return null;
+            return (null, null);
         }
     }
 
@@ -55,7 +60,7 @@ public class S3Service
     {
         var deleteRequest = new DeleteObjectRequest
         {
-            BucketName = "book-and-dock-bucket",
+            BucketName = _bucketName,
             Key = key
         };
 

@@ -31,11 +31,12 @@ namespace Backend.Controllers
         [HttpGet("download/{id}")]
         public async Task<IActionResult> DownloadImageById(int id)
         {
-            var stream = await _imageService.GetImageStreamByIdAsync(id);
+            var (stream, contentType) = await _imageService.GetImageStreamByIdAsync(id);
             if (stream == null)
                 return NotFound("Image not found in database or S3");
 
-            return File(stream, "application/octet-stream");
+            contentType ??= "application/octet-stream"; // fallback
+            return File(stream, contentType);
         }
 
         [HttpDelete("{id}")]

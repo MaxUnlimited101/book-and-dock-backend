@@ -126,12 +126,17 @@ public class Program
         builder.Services.AddScoped<IImageService, ImageService>();
 
         // Amazon S3 Integration
-        builder.Services.AddSingleton<IAmazonS3>(sp =>
+        builder.Services.AddSingleton<IAmazonS3>(_ =>
         {
             return new AmazonS3Client(
-                builder.Configuration["AWS:AccessKey"],
-                builder.Configuration["AWS:SecretKey"],
-                RegionEndpoint.GetBySystemName(builder.Configuration["AWS:Region"])
+                Environment.GetEnvironmentVariable("AWS__AccessKey")
+                    ?? throw new Exception("AWS__AccessKey not set"),
+                Environment.GetEnvironmentVariable("AWS__SecretKey")
+                    ?? throw new Exception("AWS__SecretKey not set"),
+                RegionEndpoint.GetBySystemName(
+                    Environment.GetEnvironmentVariable("AWS__Region")
+                    ?? throw new Exception("AWS__Region not set")
+                )
             );
         });
 

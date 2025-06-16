@@ -6,7 +6,7 @@ namespace Backend.Interfaces
     public interface IImageService
     {
         Task<Image> UploadImageAsync(UploadImageDto dto);
-        Task<Stream?> GetImageStreamByIdAsync(int id);
+        Task<(Stream?, string?)> GetImageStreamByIdAsync(int id);
         Task<bool> DeleteImageByIdAsync(int id);
     }
 }

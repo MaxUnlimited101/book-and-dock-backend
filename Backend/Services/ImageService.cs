@@ -39,11 +39,11 @@ namespace Backend.Services
             return await _context.Images.FindAsync(id);
         }
 
-        public async Task<Stream?> GetImageStreamByIdAsync(int id)
+        public async Task<(Stream?, string?)> GetImageStreamByIdAsync(int id)
         {
             var image = await GetByIdAsync(id);
             if (image == null || string.IsNullOrWhiteSpace(image.Url))
-                return null;
+                return (null, null);
 
             var key = ExtractS3KeyFromUrl(image.Url);
             return await _s3Service.GetFileAsync(key);
