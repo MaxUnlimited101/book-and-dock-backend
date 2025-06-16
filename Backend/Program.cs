@@ -189,6 +189,9 @@ public class Program
             });
         });
 
+        // Stripe
+        builder.Services.AddSingleton<StripeService>();
+
         // Build and configure app
         var app = builder.Build();
 
