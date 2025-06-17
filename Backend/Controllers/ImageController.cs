@@ -11,7 +11,6 @@ namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class ImageController : ControllerBase
     {
         private readonly IImageService _imageService;
@@ -22,6 +21,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("upload")]
+        [Authorize]
         public async Task<IActionResult> Upload([FromForm] UploadImageDto dto)
         {
             var result = await _imageService.UploadImageAsync(dto);
@@ -40,6 +40,7 @@ namespace Backend.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteImage(int id)
         {
             var success = await _imageService.DeleteImageByIdAsync(id);
