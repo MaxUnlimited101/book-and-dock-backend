@@ -11,4 +11,5 @@ public interface IPaymentMethodService
     Task UpdatePaymentMethodAsync(int id, PaymentMethodDTO updatedPaymentMethod);
     Task DeletePaymentMethodAsync(int id);
     Task<PaymentMethod> GetPaymentMethodByNameAsync(string name);
+    PaymentMethod? GetPaymentMethodByName(string name);
 }

@@ -74,7 +74,7 @@ public class BookingService : IBookingService
     public List<Booking> GetBookingsByUserId(int userId) =>
         _bookingRepository.GetAll().Where(b => b.SailorId == userId).ToList();
 
-    public async void Update(int id, UpdateBookingDto dto)
+    public void Update(int id, UpdateBookingDto dto)
     {
         var booking = _bookingRepository.GetById(id)
                       ?? throw new ModelNotFoundException("Booking not found");
@@ -86,7 +86,8 @@ public class BookingService : IBookingService
         booking.EndDate = dto.EndDate;
         booking.People = dto.People;
         // this might throw
-        booking.PaymentMethod = await _paymentMethodService.GetPaymentMethodByNameAsync(dto.PaymentMethod);
+        booking.PaymentMethod = _paymentMethodService.GetPaymentMethodByName(dto.PaymentMethod) ??
+                                throw new ModelInvalidException("Invalid payment method");
 
         _bookingRepository.Update(booking);
     }

@@ -67,4 +67,9 @@ public class PaymentMethodService : IPaymentMethodService
 
         return paymentMethod;
     }
+
+    public PaymentMethod? GetPaymentMethodByName(string name)
+    {
+        return _paymentMethodRepository.GetPaymentMethodByName(name);
+    }
 }

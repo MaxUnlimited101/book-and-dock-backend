@@ -55,8 +55,7 @@ public class BookingController : ControllerBase
         var bookings = _bookingService.GetAll();
         return await Task.FromResult(Ok(bookings));
     }
-
-    // TODO: fix this 
+    
     [HttpGet("my")]
     public async Task<ActionResult<List<Booking>>> GetMyBookings()
     {
@@ -70,16 +69,20 @@ public class BookingController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<StatusReturnDto>> Update(int id, [FromBody] UpdateBookingDto dto)
+    public ActionResult<StatusReturnDto> Update(int id, [FromBody] UpdateBookingDto dto)
     {
         try
         {
             _bookingService.Update(id, dto);
-            return await Task.FromResult(Ok(new StatusReturnDto("Booking updated", id)));
+            return Ok(new StatusReturnDto("Booking updated", id));
         }
         catch (ModelNotFoundException e)
         {
-            return await Task.FromResult(NotFound(new StatusReturnDto(e.Message, null)));
+            return NotFound(new StatusReturnDto(e.Message, null));
+        }
+        catch (ModelInvalidException e)
+        {
+            return BadRequest(new StatusReturnDto(e.Message, null));
         }
     }
     

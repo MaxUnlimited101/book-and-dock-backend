@@ -14,6 +14,11 @@ public class PaymentMethodRepository : IPaymentMethodRepository
         _context = context;
     }
 
+    public PaymentMethod? GetPaymentMethodById(int id)
+    {
+        return _context.PaymentMethods.FirstOrDefault(x => x.Id == id);
+    }
+
     public async Task<int> CreatePaymentMethodAsync(PaymentMethod paymentMethod)
     {
         _context.PaymentMethods.Add(paymentMethod);
@@ -29,6 +34,12 @@ public class PaymentMethodRepository : IPaymentMethodRepository
             _context.PaymentMethods.Remove(paymentMethod);
             await _context.SaveChangesAsync();
         }
+    }
+
+    public PaymentMethod? GetPaymentMethodByName(string name)
+    {
+        IEnumerable<PaymentMethod> paymentMethods = _context.PaymentMethods.AsEnumerable();
+        return paymentMethods.First(pm => String.Compare(pm.Name, name, StringComparison.OrdinalIgnoreCase) == 0);
     }
 
     public async Task<IEnumerable<PaymentMethod>> GetAllPaymentMethodsAsync()
