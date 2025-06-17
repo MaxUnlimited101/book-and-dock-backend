@@ -2,6 +2,7 @@
 using Backend.DTO.Image;
 using Backend.Interfaces;
 using Backend.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Services
 {
@@ -71,6 +72,11 @@ namespace Backend.Services
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<IEnumerable<Image>> GetAllImagesAsync()
+        {
+            return await _context.Images.ToListAsync();
         }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Backend.DTO;
 using Microsoft.AspNetCore.StaticFiles;
 
 namespace Backend.Controllers
@@ -48,6 +49,14 @@ namespace Backend.Controllers
                 return NotFound("Image not found or already deleted.");
 
             return Ok("Image deleted successfully.");
+        }
+        
+        [HttpGet("all")]
+        [Authorize]
+        public async Task<IActionResult> GetAllImages()
+        {
+            var images = await _imageService.GetAllImagesAsync();
+            return Ok(images.Select(ImageDto.FromModel));
         }
     }
 

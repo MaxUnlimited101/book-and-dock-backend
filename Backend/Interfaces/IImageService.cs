@@ -8,5 +8,6 @@ namespace Backend.Interfaces
         Task<Image> UploadImageAsync(UploadImageDto dto);
         Task<(Stream?, string?)> GetImageStreamByIdAsync(int id);
         Task<bool> DeleteImageByIdAsync(int id);
+        Task<IEnumerable<Image>> GetAllImagesAsync();
     }
 }
